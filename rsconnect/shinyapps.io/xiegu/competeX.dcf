@@ -1,0 +1,13 @@
+name: competeX
+title: competeX
+username:
+account: xiegu
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 226065
+bundleId: 1045645
+url: https://xiegu.shinyapps.io/competeX/
+when: 1508991802.22839
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: jd_comment.csv|jd_comment.zip
