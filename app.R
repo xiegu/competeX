@@ -9,6 +9,7 @@ library(dplyr)
 library(highcharter)
 library(wordcloud2)
 library(purrr)
+library(jsonlite)
 
 #source('config.R', local = TRUE)
 #source('data.R', local = TRUE)
