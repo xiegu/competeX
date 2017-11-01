@@ -5,9 +5,8 @@ account: xiegu
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 226065
-bundleId: 1045645
+bundleId: 1054545
 url: https://xiegu.shinyapps.io/competeX/
-when: 1508991802.22839
+when: 1509524616.56937
 asMultiple: FALSE
 asStatic: FALSE
-ignoredFiles: jd_comment.csv|jd_comment.zip

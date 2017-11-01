@@ -28,33 +28,54 @@ ui <- dashboardPage(skin = 'red',
                       )
                     ),
                     dashboardBody(
+                      # Include IntroJS styling
+                      includeCSS("www/introjs.css"),
+                      
+                      # Include styling for the app
+                      #includeCSS("app.css"),
+                      
+                      # Include IntroJS library
+                      includeScript("www/intro.js"),
+                      
+                      # Include javascript code to make shiny communicate with introJS
+                      includeScript("www/app.js"),
+                      
                       tabItems(
                         tabItem(tabName = 'Competitor',
-                                fluidRow(
                                   column(
                                     offset = 10,
                                     width = 2,
-                                    valueBox(width = NULL, color = 'red', icon = icon('refresh', class = 'fa-spin fa-inverse'), subtitle = '数据更新时间: ', value = h4(strong(com$update_time[1])))
+                                    box(status = 'danger',
+                                        title = p(icon('refresh', class = 'fa-spin'), '数据更新时间: '),
+                                        width = NULL,
+                                        h4(strong(com$update_time[1]))
                                   )
                                 ),
                                 fluidRow(
+                                  column(
+                                    width = 2,
+                                    actionButton(inputId="startHelp1", label="Help", class="btn-success")
+                                  ),
                                   column(
                                     width = 2,
                                     checkboxInput('Outlier', '是否包括价格极高/极低的商品？', value = TRUE)
                                   )
                                 ),
                                 fluidRow(
-                                  box(status = 'danger',
+                                  box(id = 'step1_1',
+                                      status = 'danger',
                                       title = '冰箱最新价格全景',
                                       width = 5,
                                       highchartOutput('PriceRef', height = '400px')
                                   ),
-                                  box(status = 'success',
+                                  box(id = 'step1_2',
+                                      status = 'success',
                                       title = '冰箱最新在售商品数',
                                       width = 3,
                                       highchartOutput('TopRef', height = '400px')
                                   ),
-                                  box(status = 'primary',
+                                  box(id = 'step1_3',
+                                      status = 'primary',
                                       title = '冰箱最新市场容量',
                                       width = 4,
                                       highchartOutput('SaleRef', height = '400px')
@@ -110,8 +131,58 @@ ui <- dashboardPage(skin = 'red',
                                       width = 4,
                                       highchartOutput('SaleTV', height = '400px')
                                   )
+                                ),
+                                fluidRow(
+                                  box(status = 'danger',
+                                      title = '燃气灶最新价格全景',
+                                      width = 5,
+                                      highchartOutput('PriceGas', height = '400px')
+                                  ),
+                                  box(status = 'success',
+                                      title = '燃气灶最新在售商品数',
+                                      width = 3,
+                                      highchartOutput('TopGas', height = '400px')
+                                  ),
+                                  box(status = 'primary',
+                                      title = '燃气灶最新市场容量',
+                                      width = 4,
+                                      highchartOutput('SaleGas', height = '400px')
+                                  )
+                                ),
+                                fluidRow(
+                                  box(status = 'danger',
+                                      title = '油烟机最新价格全景',
+                                      width = 5,
+                                      highchartOutput('PriceHood', height = '400px')
+                                  ),
+                                  box(status = 'success',
+                                      title = '油烟机最新在售商品数',
+                                      width = 3,
+                                      highchartOutput('TopHood', height = '400px')
+                                  ),
+                                  box(status = 'primary',
+                                      title = '油烟机最新市场容量',
+                                      width = 4,
+                                      highchartOutput('SaleHood', height = '400px')
+                                  )
+                                ),
+                                fluidRow(
+                                  box(status = 'danger',
+                                      title = '洗碗机最新价格全景',
+                                      width = 5,
+                                      highchartOutput('PriceDish', height = '400px')
+                                  ),
+                                  box(status = 'success',
+                                      title = '洗碗机最新在售商品数',
+                                      width = 3,
+                                      highchartOutput('TopDish', height = '400px')
+                                  ),
+                                  box(status = 'primary',
+                                      title = '洗碗机最新市场容量',
+                                      width = 4,
+                                      highchartOutput('SaleDish', height = '400px')
+                                  )
                                 )
-                                
                         ),
                         tabItem(tabName = "CommentCrawl",
                                 fluidRow(
@@ -139,7 +210,11 @@ ui <- dashboardPage(skin = 'red',
                                   column(
                                     offset = 10,
                                     width = 2,
-                                    valueBox(width = NULL, color = 'red', icon = icon('refresh', class = 'fa-spin fa-inverse'), subtitle = '数据更新时间: ', value = h4(strong(sale$update_time[1])))
+                                    box(status = 'danger',
+                                        title = p(icon('refresh', class = 'fa-spin'), '数据更新时间: '),
+                                        width = NULL,
+                                        h4(strong(com$update_time[1]))
+                                    )
                                   )
                                 ),
                                 # fluidRow(icon = icon('refresh', class = 'fa-spin fa-inverse'),
@@ -149,23 +224,36 @@ ui <- dashboardPage(skin = 'red',
                                 #   column(width = 2,
                                 #          uiOutput('HotBrand')
                                 #   )
-                                # ),
+                                # )
                                 fluidRow(
-                                  box(status = 'primary',
+                                  column(width = 2,
+                                         actionButton(inputId="startHelp2", label="Help", class="btn-success")
+                                  )
+                                ),
+                                br(),
+                                fluidRow(
+                                  box(id = 'step2_1',
+                                      status = 'primary',
                                       title = '各品牌热卖商品排行榜', 
                                       width = 6,
-                                      height = '700px',
                                       fluidRow(
                                         column(width = 2,
-                                               selectInput('HotCategory', label = '类别', choices = unique(sale$category))
+                                               selectInput('HotCategory', label = '类别', choices = c(
+                                                 '冰箱' = 'ref', 
+                                                 '空调' = 'air',
+                                                 '洗衣机' = 'wash', 
+                                                 '电视' = 'tv',
+                                                 '燃气灶' = 'gas',
+                                                 '油烟机' = 'hood',
+                                                 '洗碗机'= 'dish'))
                                         ),
                                         column(width = 2,
                                                uiOutput('HotBrand')
                                         )
                                       ),
-                                      dataTableOutput('HotName', height = 'auto')
+                                      dataTableOutput('HotName')
                                   ),
-                                  tabBox(
+                                  tabBox(id = 'step2_2',
                                     title = '热卖商品关键字',
                                     side = 'right',
                                     width = 6,
@@ -180,11 +268,21 @@ ui <- dashboardPage(skin = 'red',
                                     ),
                                     tabPanel('电视',
                                              wordcloud2Output('TVWord', height = '400px')
+                                    ),
+                                    tabPanel('燃气灶',
+                                             wordcloud2Output('GasWord', height = '400px')
+                                    ),
+                                    tabPanel('油烟机',
+                                             wordcloud2Output('HoodWord', height = '400px')
+                                    ),
+                                    tabPanel('洗碗机',
+                                             wordcloud2Output('DishWord', height = '400px')
                                     )
                                   )
                                 ),
                                 fluidRow(
-                                  tabBox(title = NULL,
+                                  tabBox(id = 'step2_3',
+                                         title = NULL,
                                          side = 'right',
                                          width = 6,
                                          tabPanel('最新热卖冰箱排行榜',
@@ -234,23 +332,77 @@ ui <- dashboardPage(skin = 'red',
                                            highchartOutput('SaleBrandTV')
                                          )
                                   )
+                                ),
+                                fluidRow(
+                                  tabBox(title = NULL,
+                                         side = 'right',
+                                         width = 6,
+                                         tabPanel('最新热卖燃气灶排行榜',
+                                                  #p('')
+                                                  dataTableOutput('SaleGasTop')
+                                         ),
+                                         tabPanel(
+                                           title = '最新热卖燃气灶品牌占比',
+                                           highchartOutput('SaleBrandGas')
+                                         )
+                                  ),
+                                  tabBox(title = NULL,
+                                         side = 'right',
+                                         width = 6,
+                                         tabPanel('最新热卖油烟机排行榜',
+                                                  #p('')
+                                                  dataTableOutput('SaleHoodTop')
+                                         ),
+                                         tabPanel(
+                                           title = '最新热卖油烟机品牌占比',
+                                           highchartOutput('SaleBrandHood')
+                                         )
+                                  )
+                                ),
+                                fluidRow(
+                                  
+                                  tabBox(title = NULL,
+                                         side = 'right',
+                                         width = 6,
+                                         tabPanel('最新热卖洗碗机排行榜',
+                                                  #p('')
+                                                  dataTableOutput('SaleDishTop')
+                                         ),
+                                         tabPanel(
+                                           title = '最新热卖洗碗机品牌占比',
+                                           highchartOutput('SaleBrandDish')
+                                         )
+                                  )
                                 )
+                                
                         ),
                         tabItem(tabName = 'HotSearch',
                                 fluidRow(
                                   column(
                                     offset = 10,
                                     width = 2,
-                                    valueBox(width = NULL, color = 'red', icon = icon('refresh', class = 'fa-spin fa-inverse'), subtitle = '数据更新时间: ', value = h4(strong(search$update_time[1])))
+                                    box(status = 'danger',
+                                        title = p(icon('refresh', class = 'fa-spin'), '数据更新时间: '),
+                                        width = NULL,
+                                        h4(strong(com$update_time[1]))
+                                    )
                                   )
                                 ),
                                 fluidRow(
-                                  box(status = 'primary',
+                                  column(width = 2,
+                                         actionButton(inputId="startHelp3", label="Help", class="btn-success")
+                                  )
+                                ),
+                                br(),
+                                fluidRow(
+                                  box(id = 'step3_1',
+                                      status = 'primary',
                                       title = '热门搜索词分布',
                                       width = 6,
                                       highchartOutput('HotSearchBar', height = '800px')
                                   ),
-                                  box(status = 'primary',
+                                  box(id = 'step3_2',
+                                      status = 'primary',
                                       title = '热门搜索词类占比',
                                       width = 6,
                                       highchartOutput('HotSearchPie', height = '600px'))
@@ -261,16 +413,28 @@ ui <- dashboardPage(skin = 'red',
                                   column(
                                     offset = 10,
                                     width = 2,
-                                    valueBox(width = NULL, color = 'red', icon = icon('refresh', class = 'fa-spin fa-inverse'), subtitle = '数据更新时间: ', value = h4(strong(score_full$update_time[1])))
+                                    box(status = 'danger',
+                                        title = p(icon('refresh', class = 'fa-spin'), '数据更新时间: '),
+                                        width = NULL,
+                                        h4(strong(com$update_time[1]))
+                                    )
                                   )
                                 ),
                                 fluidRow(
-                                  box(status = 'info',
+                                  column(width = 2,
+                                         actionButton(inputId="startHelp4", label="Help", class="btn-success")
+                                  )
+                                ),
+                                br(),
+                                fluidRow(
+                                  box(id = 'step4_1',
+                                      status = 'info',
                                       title = '冰箱最新客户品牌偏好度',
                                       width = 4,
                                       highchartOutput('ScoreRef', height = '600px')
                                   ),
                                   tabBox(
+                                    id = 'step4_2',
                                     title = NULL,
                                     width = 8,
                                     side = 'right',
@@ -368,6 +532,81 @@ ui <- dashboardPage(skin = 'red',
                                     )
                                   )
                                   
+                                ),
+                                fluidRow(
+                                  box(status = 'info',
+                                      title = '燃气灶最新客户品牌偏好度',
+                                      width = 4,
+                                      highchartOutput('ScoreGas', height = '600px')
+                                  ),
+                                  tabBox(
+                                    title = NULL,
+                                    width = 8,
+                                    side = 'right',
+                                    tabPanel(
+                                      title = '燃气灶各品牌商品得分',
+                                      fluidRow(
+                                        column(width = 2,
+                                               selectInput('GasBrandSelector', label = '品牌', choices = unique(filter(score_full, category == 'gas')$brand))
+                                        )),
+                                      dataTableOutput('ScoreGasBrand')
+                                    ),
+                                    tabPanel(
+                                      title = '燃气灶商品用户偏好排行榜',
+                                      dataTableOutput('ScoreGasTop')
+                                    )
+                                  )
+                                  
+                                ),
+                                fluidRow(
+                                  box(status = 'info',
+                                      title = '油烟机最新客户品牌偏好度',
+                                      width = 4,
+                                      highchartOutput('ScoreHood', height = '600px')
+                                  ),
+                                  tabBox(
+                                    title = NULL,
+                                    width = 8,
+                                    side = 'right',
+                                    tabPanel(
+                                      title = '油烟机各品牌商品得分',
+                                      fluidRow(
+                                        column(width = 2,
+                                               selectInput('HoodBrandSelector', label = '品牌', choices = unique(filter(score_full, category == 'hood')$brand))
+                                        )),
+                                      dataTableOutput('ScoreHoodBrand')
+                                    ),
+                                    tabPanel(
+                                      title = '油烟机商品用户偏好排行榜',
+                                      dataTableOutput('ScoreHoodTop')
+                                    )
+                                  )
+                                  
+                                ),
+                                fluidRow(
+                                  box(status = 'info',
+                                      title = '洗碗机最新客户品牌偏好度',
+                                      width = 4,
+                                      highchartOutput('ScoreDish', height = '600px')
+                                  ),
+                                  tabBox(
+                                    title = NULL,
+                                    width = 8,
+                                    side = 'right',
+                                    tabPanel(
+                                      title = '洗碗机各品牌商品得分',
+                                      fluidRow(
+                                        column(width = 2,
+                                               selectInput('DishBrandSelector', label = '品牌', choices = unique(filter(score_full, category == 'dish')$brand))
+                                        )),
+                                      dataTableOutput('ScoreDishBrand')
+                                    ),
+                                    tabPanel(
+                                      title = '洗碗机商品用户偏好排行榜',
+                                      dataTableOutput('ScoreDishTop')
+                                    )
+                                  )
+                                  
                                 )
                         ),
                         tabItem(tabName = 'CommentSentiment',
@@ -375,11 +614,22 @@ ui <- dashboardPage(skin = 'red',
                                   column(
                                     offset = 10,
                                     width = 2,
-                                    valueBox(width = NULL, color = 'red', icon = icon('refresh', class = 'fa-spin fa-inverse'), subtitle = '数据更新时间: ', value = h4(strong(score_full$update_time[1]))) # to udapte
+                                    box(status = 'danger',
+                                        title = p(icon('refresh', class = 'fa-spin'), '数据更新时间: '),
+                                        width = NULL,
+                                        h4(strong(com$update_time[1]))
+                                    )
                                   )
                                 ),
                                 fluidRow(
-                                  box(status = 'danger',
+                                  column(width = 2,
+                                         actionButton(inputId="startHelp5", label="Help", class="btn-success")
+                                  )
+                                ),
+                                br(),
+                                fluidRow(
+                                  box(id = 'step5_1',
+                                      status = 'danger',
                                       title = '用户感知度',
                                       width = 12,
                                       fluidRow(
@@ -391,7 +641,10 @@ ui <- dashboardPage(skin = 'red',
                                                                                                   '冰箱' = 'ref', 
                                                                                                   '空调' = 'air',
                                                                                                   '洗衣机' = 'wash', 
-                                                                                                  '电视' = 'tv'))
+                                                                                                  '电视' = 'tv',
+                                                                                                  '燃气灶' = 'gas',
+                                                                                                  '油烟机' = 'hood',
+                                                                                                  '洗碗机'= 'dish'))
                                         ),
                                         column(width = 2,
                                                selectInput('CommentDirection', label = '方向', choices = c(
@@ -409,6 +662,44 @@ ui <- dashboardPage(skin = 'red',
                     )
 
 server <- shinyServer(function(input, output, session){
+  
+  
+  observeEvent(input$startHelp1,{
+    # set help content
+    session$sendCustomMessage(type = 'setHelpContent1', message = list(steps_1 = toJSON(steps_1)))
+    
+    # on click, send custom message to start help
+    session$sendCustomMessage(type = 'startHelp1', message = list(""))
+    
+  })
+  
+  observeEvent(input$startHelp2,{
+    session$sendCustomMessage(type = 'setHelpContent2', message = list(steps_2 = toJSON(steps_2)))
+    # on click, send custom message to start help
+    session$sendCustomMessage(type = 'startHelp2', message = list(""))
+    
+  })
+  
+  observeEvent(input$startHelp3,{
+    session$sendCustomMessage(type = 'setHelpContent3', message = list(steps_3 = toJSON(steps_3)))
+    # on click, send custom message to start help
+    session$sendCustomMessage(type = 'startHelp3', message = list(""))
+    
+  })
+  
+  observeEvent(input$startHelp4,{
+    session$sendCustomMessage(type = 'setHelpContent4', message = list(steps_4 = toJSON(steps_4)))
+    # on click, send custom message to start help
+    session$sendCustomMessage(type = 'startHelp4', message = list(""))
+    
+  })
+  
+  observeEvent(input$startHelp5,{
+    session$sendCustomMessage(type = 'setHelpContent5', message = list(steps_5 = toJSON(steps_5)))
+    # on click, send custom message to start help
+    session$sendCustomMessage(type = 'startHelp5', message = list(""))
+    
+  })
   
   output$TopRef <- renderHighchart({
     highchart()%>%
@@ -446,7 +737,32 @@ server <- shinyServer(function(input, output, session){
       hc_legend(enabled = FALSE)
   })
   
+  output$TopGas <- renderHighchart({
+    highchart()%>%
+      #hc_title(text = '电视在售商品数')%>%
+      hc_chart(type ='bar')%>%
+      hc_xAxis(categories = head(top_gas,10)$brand)%>%
+      hc_add_series(data = head(top_gas,10)$num, color = '#B2DF8A', name = '商品数')%>%
+      hc_legend(enabled = FALSE)
+  })
   
+  output$TopHood <- renderHighchart({
+    highchart()%>%
+      #hc_title(text = '电视在售商品数')%>%
+      hc_chart(type ='bar')%>%
+      hc_xAxis(categories = head(top_hood,10)$brand)%>%
+      hc_add_series(data = head(top_hood,10)$num, color = '#A6CEE3', name = '商品数')%>%
+      hc_legend(enabled = FALSE)
+  })
+  
+  output$TopDish <- renderHighchart({
+    highchart()%>%
+      #hc_title(text = '电视在售商品数')%>%
+      hc_chart(type ='bar')%>%
+      hc_xAxis(categories = head(top_dish,10)$brand)%>%
+      hc_add_series(data = head(top_dish,10)$num, color = '#1F78B4', name = '商品数')%>%
+      hc_legend(enabled = FALSE)
+  })
   
   output$PriceRef <- renderHighchart({
     highchart()%>%
@@ -475,6 +791,27 @@ server <- shinyServer(function(input, output, session){
       hc_add_series_boxplot(x = com_tv$p, by = com_tv$brand, name = 'Price', color = '#ffa700', outliers = input$Outlier)%>%
       hc_legend(enabled = FALSE)
   })
+  
+  output$PriceGas <- renderHighchart({
+    highchart()%>%
+      #hc_title(text = '洗衣机最新价格全景')%>%
+      hc_add_series_boxplot(x = com_gas$p, by = com_gas$brand, name = 'Price', color = '#B2DF8A', outliers = input$Outlier)%>%
+      hc_legend(enabled = FALSE)
+  })
+  
+  output$PriceHood <- renderHighchart({
+    highchart()%>%
+      #hc_title(text = '洗衣机最新价格全景')%>%
+      hc_add_series_boxplot(x = com_hood$p, by = com_hood$brand, name = 'Price', color = '#A6CEE3', outliers = input$Outlier)%>%
+      hc_legend(enabled = FALSE)
+  })
+  
+  output$PriceDish <- renderHighchart({
+    highchart()%>%
+      #hc_title(text = '洗衣机最新价格全景')%>%
+      hc_add_series_boxplot(x = com_dish$p, by = com_dish$brand, name = 'Price', color = '#1F78B4', outliers = input$Outlier)%>%
+      hc_legend(enabled = FALSE)
+  })
 
   output$SaleRef <- renderHighchart({
     hchart(top_ref, 'treemap', hcaes(x = brand, value = sale, color = sale))%>%
@@ -500,24 +837,57 @@ server <- shinyServer(function(input, output, session){
       hc_legend(enabled = FALSE)
   })
   
+  output$SaleHood <- renderHighchart({
+    hchart(top_hood, 'treemap', hcaes(x = brand, value = sale, color = sale))%>%
+      hc_colorAxis(minColor= '#FFFFFF',maxColor= '#A6CEE3') %>%
+      hc_legend(enabled = FALSE)
+  })
+  
+  output$SaleDish <- renderHighchart({
+    hchart(top_dish, 'treemap', hcaes(x = brand, value = sale, color = sale))%>%
+      hc_colorAxis(minColor= '#FFFFFF',maxColor= '#1F78B4') %>%
+      hc_legend(enabled = FALSE)
+  })
+  
+  output$SaleGas <- renderHighchart({
+    hchart(top_gas, 'treemap', hcaes(x = brand, value = sale, color = sale))%>%
+      hc_colorAxis(minColor= '#FFFFFF',maxColor= '#B2DF8A') %>%
+      hc_legend(enabled = FALSE)
+  })
+  
   output$RefWord <- renderWordcloud2({
     word <- table(hot_sale_cat_key$ref)%>%as.data.frame%>%subset(., !Var1%in%stop_words$ref)%>%arrange(-Freq)%>%head(50)
-    wordcloud2(word, color= ifelse(word$Freq > 25, '#d62d20', 'grey'))
+    wordcloud2(word, rotateRatio = 0, color= ifelse(word$Freq > 25, '#d62d20', 'grey'))
   })
   
   output$AirWord <- renderWordcloud2({
     word <- table(hot_sale_cat_key$air)%>%as.data.frame%>%subset(., !Var1%in%stop_words$air)%>%arrange(-Freq)%>%head(50)
-    wordcloud2(word, color = ifelse(word$Freq> 25, '#0057e7', 'grey'))
+    wordcloud2(word, rotateRatio = 0, color = ifelse(word$Freq> 25, '#0057e7', 'grey'))
   })
   
   output$WashWord <- renderWordcloud2({
     word <- table(hot_sale_cat_key$wash)%>%as.data.frame%>%subset(., !Var1%in%stop_words$wash)%>%arrange(-Freq)%>%head(50)
-    wordcloud2(word, color = ifelse(word$Freq > 25 , '#008744', 'grey'))
+    wordcloud2(word, rotateRatio = 0, color = ifelse(word$Freq > 25 , '#008744', 'grey'))
   })
   
   output$TVWord <- renderWordcloud2({
     word <- table(hot_sale_cat_key$tv)%>%as.data.frame%>%subset(., !Var1%in%stop_words$tv)%>%arrange(-Freq)%>%head(50)
-    wordcloud2(word, color = ifelse(word$Freq > 25, '#ffa700', 'grey'))
+    wordcloud2(word, rotateRatio = 0, color = ifelse(word$Freq > 25, '#ffa700', 'grey'))
+  })
+  
+  output$HoodWord <- renderWordcloud2({
+    word <- table(hot_sale_cat_key$hood)%>%as.data.frame%>%subset(., !Var1%in%stop_words$hood)%>%arrange(-Freq)%>%head(50)
+    wordcloud2(word, rotateRatio = 0, color = ifelse(word$Freq > 25, '#A6CEE3', 'grey'))
+  })
+  
+  output$GasWord <- renderWordcloud2({
+    word <- table(hot_sale_cat_key$gas)%>%as.data.frame%>%subset(., !Var1%in%stop_words$gas)%>%arrange(-Freq)%>%head(50)
+    wordcloud2(word, rotateRatio = 0, color = ifelse(word$Freq > 25, '#B2DF8A', 'grey'))
+  })
+  
+  output$DishWord <- renderWordcloud2({
+    word <- table(hot_sale_cat_key$dish)%>%as.data.frame%>%subset(., !Var1%in%stop_words$dish)%>%arrange(-Freq)%>%head(50)
+    wordcloud2(word, rotateRatio = 0, color = ifelse(word$Freq > 15, '#1F78B4', 'grey'))
   })
   
   output$HotBrand <- renderUI({
@@ -591,6 +961,51 @@ server <- shinyServer(function(input, output, session){
       hc_tooltip(pointFormat= '{series.name}: <b>{point.percentage:.1f}%</b>')
   })
   
+  output$SaleBrandGas <- renderHighchart({
+    table <- filter(sale_brand, category == 'gas') %>%ungroup() %>% mutate(pct = n/sum(n)*100) %>% select(brand, pct) %>% rename(name = brand, y = pct)
+    table2 <- list_parse(table)
+    highchart()%>%
+      hc_add_series(type = 'pie', data = table2, innerSize = '40%', name = '占比') %>%
+      hc_plotOptions(pie = list(allowPointSelect = TRUE,
+                                showInLegend = FALSE,
+                                cursor = 'pointer',
+                                dataLabels = list(
+                                  enabled = TRUE,
+                                  format = '<b>{point.name}</b>: {point.percentage:.1f} %'),
+                                connectorColor = 'silver')) %>%
+      hc_tooltip(pointFormat= '{series.name}: <b>{point.percentage:.1f}%</b>')
+  })
+  
+  output$SaleBrandHood <- renderHighchart({
+    table <- filter(sale_brand, category == 'hood') %>%ungroup() %>% mutate(pct = n/sum(n)*100) %>% select(brand, pct) %>% rename(name = brand, y = pct)
+    table2 <- list_parse(table)
+    highchart()%>%
+      hc_add_series(type = 'pie', data = table2, innerSize = '40%', name = '占比') %>%
+      hc_plotOptions(pie = list(allowPointSelect = TRUE,
+                                showInLegend = FALSE,
+                                cursor = 'pointer',
+                                dataLabels = list(
+                                  enabled = TRUE,
+                                  format = '<b>{point.name}</b>: {point.percentage:.1f} %'),
+                                connectorColor = 'silver')) %>%
+      hc_tooltip(pointFormat= '{series.name}: <b>{point.percentage:.1f}%</b>')
+  })
+  
+  output$SaleBrandDish <- renderHighchart({
+    table <- filter(sale_brand, category == 'dish') %>%ungroup() %>% mutate(pct = n/sum(n)*100) %>% select(brand, pct) %>% rename(name = brand, y = pct)
+    table2 <- list_parse(table)
+    highchart()%>%
+      hc_add_series(type = 'pie', data = table2, innerSize = '40%', name = '占比') %>%
+      hc_plotOptions(pie = list(allowPointSelect = TRUE,
+                                showInLegend = FALSE,
+                                cursor = 'pointer',
+                                dataLabels = list(
+                                  enabled = TRUE,
+                                  format = '<b>{point.name}</b>: {point.percentage:.1f} %'),
+                                connectorColor = 'silver')) %>%
+      hc_tooltip(pointFormat= '{series.name}: <b>{point.percentage:.1f}%</b>')
+  })
+  
   output$SaleRefTop <- renderDataTable({
     table <- select(sale_ref, brand, id, name)
     datatable(table) %>%
@@ -635,6 +1050,38 @@ server <- shinyServer(function(input, output, session){
         )
   })
   
+  output$SaleGasTop <- renderDataTable({
+    table <- select(sale_gas, brand, id, name)
+    datatable(table) %>%
+      formatStyle(
+        'brand',
+        color = 'white',
+        backgroundColor = styleEqual(
+          unique(sale_gas$brand), color_brand[1:length(unique(sale_gas$brand))])
+      )
+  })
+  
+  output$SaleHoodTop <- renderDataTable({
+    table <- select(sale_hood, brand, id, name)
+    datatable(table) %>%
+      formatStyle(
+        'brand',
+        color = 'white',
+        backgroundColor = styleEqual(
+          unique(sale_hood$brand), color_brand[1:length(unique(sale_hood$brand))])
+      )
+  })
+  
+  output$SaleDishTop <- renderDataTable({
+    table <- select(sale_dish, brand, id, name)
+    datatable(table) %>%
+      formatStyle(
+        'brand',
+        color = 'white',
+        backgroundColor = styleEqual(
+          unique(sale_dish$brand), color_brand[1:length(unique(sale_dish$brand))])
+      )
+  })
   output$HotSearchBar <- renderHighchart({
    table <- filter(search_table, category != 'mobile') %>% select(word, color_2, count) %>% rename(name = word, color = color_2, y = count)
    table2 <- list_parse(table)
@@ -685,7 +1132,6 @@ server <- shinyServer(function(input, output, session){
     table <- mutate(table, adj_good_rate = good_rate/max(good_rate), adj_poor_rate = poor_rate/max(poor_rate))
     table <- arrange(table, adj_good_rate)
     highchart()%>%
-      #hc_title(text = '电视在售商品数')%>%
       hc_chart(type ='bar')%>%
      #hc_yAxis(labels= list(format='{function() {return Math.abs(value)}}')) %>%
       hc_xAxis(categories = table$brand, reversed = FALSE)%>%
@@ -704,7 +1150,6 @@ server <- shinyServer(function(input, output, session){
     table <- mutate(table, adj_good_rate = good_rate/max(good_rate), adj_poor_rate = poor_rate/max(poor_rate))
     table <- arrange(table, adj_good_rate)
     highchart()%>%
-      #hc_title(text = '电视在售商品数')%>%
       hc_chart(type ='bar')%>%
       #hc_yAxis(labels= list(format='{function() {return Math.abs(value)}}')) %>%
       hc_xAxis(categories = table$brand, reversed = FALSE)%>%
@@ -723,7 +1168,6 @@ server <- shinyServer(function(input, output, session){
     table <- mutate(table, adj_good_rate = good_rate/max(good_rate), adj_poor_rate = poor_rate/max(poor_rate))
     table <- arrange(table, adj_good_rate)
     highchart()%>%
-      #hc_title(text = '电视在售商品数')%>%
       hc_chart(type ='bar')%>%
       #hc_yAxis(labels= list(format='{function() {return Math.abs(value)}}')) %>%
       hc_xAxis(categories = table$brand, reversed = FALSE)%>%
@@ -756,6 +1200,54 @@ server <- shinyServer(function(input, output, session){
     #'{series.name}: <b>{point.percentage:.1f}%</b>'
   })
   
+  output$ScoreGas <- renderHighchart({
+    table <- filter(score_full, category == 'gas')%>% group_by(brand) %>% summarize(comment_num = sum(comment_count), good = sum(good_count), poor = sum(poor_count), good_rate = good/comment_num, poor_rate = poor/comment_num)%>%arrange(-comment_num)%>%head(10)
+    table <- mutate(table, adj_good_rate = good_rate/max(good_rate), adj_poor_rate = poor_rate/max(poor_rate))
+    table <- arrange(table, adj_good_rate)
+    highchart()%>%
+      hc_chart(type ='bar')%>%
+      #hc_yAxis(labels= list(format='{function() {return Math.abs(value)}}')) %>%
+      hc_xAxis(categories = table$brand, reversed = FALSE)%>%
+      hc_xAxis(categories = table$brand, opposite = TRUE, reversed = FALSE) %>%
+      hc_add_series(data = table$adj_good_rate, name = '相对好评率',  color = '#B2DF8A', label = list(step = 1))%>%
+      hc_add_series(data = -table$adj_poor_rate, name = '相对差评率', color = 'black', label = list(step = 1)) %>%
+      hc_plotOptions(series = list(stacking = 'normal'))%>%
+      hc_tooltip(pointFormat = '{series.name}: {point.y: .3f}') %>% 
+      hc_legend(enabled = TRUE) #%>%
+  })
+  
+  output$ScoreHood <- renderHighchart({
+    table <- filter(score_full, category == 'hood')%>% group_by(brand) %>% summarize(comment_num = sum(comment_count), good = sum(good_count), poor = sum(poor_count), good_rate = good/comment_num, poor_rate = poor/comment_num)%>%arrange(-comment_num)%>%head(10)
+    table <- mutate(table, adj_good_rate = good_rate/max(good_rate), adj_poor_rate = poor_rate/max(poor_rate))
+    table <- arrange(table, adj_good_rate)
+    highchart()%>%
+      hc_chart(type ='bar')%>%
+      #hc_yAxis(labels= list(format='{function() {return Math.abs(value)}}')) %>%
+      hc_xAxis(categories = table$brand, reversed = FALSE)%>%
+      hc_xAxis(categories = table$brand, opposite = TRUE, reversed = FALSE) %>%
+      hc_add_series(data = table$adj_good_rate, name = '相对好评率',  color = '#A6CEE3', label = list(step = 1))%>%
+      hc_add_series(data = -table$adj_poor_rate, name = '相对差评率', color = 'black', label = list(step = 1)) %>%
+      hc_plotOptions(series = list(stacking = 'normal'))%>%
+      hc_tooltip(pointFormat = '{series.name}: {point.y: .3f}') %>% 
+      hc_legend(enabled = TRUE) #%>%
+  })
+  
+  output$ScoreDish <- renderHighchart({
+    table <- filter(score_full, category == 'dish')%>% group_by(brand) %>% summarize(comment_num = sum(comment_count), good = sum(good_count), poor = sum(poor_count), good_rate = good/comment_num, poor_rate = poor/comment_num)%>%arrange(-comment_num)%>%head(10)
+    table <- mutate(table, adj_good_rate = good_rate/max(good_rate), adj_poor_rate = poor_rate/max(poor_rate))
+    table <- arrange(table, adj_good_rate)
+    highchart()%>%
+      hc_chart(type ='bar')%>%
+      #hc_yAxis(labels= list(format='{function() {return Math.abs(value)}}')) %>%
+      hc_xAxis(categories = table$brand, reversed = FALSE)%>%
+      hc_xAxis(categories = table$brand, opposite = TRUE, reversed = FALSE) %>%
+      hc_add_series(data = table$adj_good_rate, name = '相对好评率',  color = '#1F78B4', label = list(step = 1))%>%
+      hc_add_series(data = -table$adj_poor_rate, name = '相对差评率', color = 'black', label = list(step = 1)) %>%
+      hc_plotOptions(series = list(stacking = 'normal'))%>%
+      hc_tooltip(pointFormat = '{series.name}: {point.y: .3f}') %>% 
+      hc_legend(enabled = TRUE) #%>%
+  })
+  
   output$ScoreRefBrand <- renderDataTable({
     table <- filter(score_full, (category == 'ref') & (brand == input$RefBrandSelector)) %>% select(id, name, comment_count, good_rate, poor_rate) %>% arrange(-comment_count)
     datatable(table, rownames = FALSE)
@@ -773,6 +1265,21 @@ server <- shinyServer(function(input, output, session){
   
   output$ScoreTVBrand <- renderDataTable({
     table <- filter(score_full, (category == 'tv') & (brand == input$TVBrandSelector)) %>% select(id, name, comment_count, good_rate, poor_rate) %>% arrange(-comment_count)
+    datatable(table, rownames = FALSE)
+  })
+  
+  output$ScoreGasBrand <- renderDataTable({
+    table <- filter(score_full, (category == 'gas') & (brand == input$GasBrandSelector)) %>% select(id, name, comment_count, good_rate, poor_rate) %>% arrange(-comment_count)
+    datatable(table, rownames = FALSE)
+  })
+  
+  output$ScoreHoodBrand <- renderDataTable({
+    table <- filter(score_full, (category == 'hood') & (brand == input$HoodBrandSelector)) %>% select(id, name, comment_count, good_rate, poor_rate) %>% arrange(-comment_count)
+    datatable(table, rownames = FALSE)
+  })
+  
+  output$ScoreDishBrand <- renderDataTable({
+    table <- filter(score_full, (category == 'dish') & (brand == input$DishBrandSelector)) %>% select(id, name, comment_count, good_rate, poor_rate) %>% arrange(-comment_count)
     datatable(table, rownames = FALSE)
   })
   
@@ -824,6 +1331,42 @@ server <- shinyServer(function(input, output, session){
       )
   })
   
+  output$ScoreGasTop <- renderDataTable({
+    table <- filter(score_full, category == 'gas') %>% select(id, name, brand, score) %>% top_n(20, score)
+    datatable(table, rownames = FALSE) %>%
+      formatStyle(
+        'score',
+        background = styleColorBar(table$score, '#B2DF8A'),
+        backgroundSize = '100% 90%',
+        backgroundRepeat = 'no-repeat',
+        backgroundPosition = 'center'
+      )
+  })
+  
+  output$ScoreHoodTop <- renderDataTable({
+    table <- filter(score_full, category == 'hood') %>% select(id, name, brand, score) %>% top_n(20, score)
+    datatable(table, rownames = FALSE) %>%
+      formatStyle(
+        'score',
+        background = styleColorBar(table$score, '#A6CEE3'),
+        backgroundSize = '100% 90%',
+        backgroundRepeat = 'no-repeat',
+        backgroundPosition = 'center'
+      )
+  })
+  
+  output$ScoreDishTop <- renderDataTable({
+    table <- filter(score_full, category == 'dish') %>% select(id, name, brand, score) %>% top_n(20, score)
+    datatable(table, rownames = FALSE) %>%
+      formatStyle(
+        'score',
+        background = styleColorBar(table$score, '#1F78B4'),
+        backgroundSize = '100% 90%',
+        backgroundRepeat = 'no-repeat',
+        backgroundPosition = 'center'
+      )
+  })
+  
   output$CommentBrand <- renderUI({
     withProgress(message = '正在加载...', value = 0,
                  {
@@ -832,23 +1375,35 @@ server <- shinyServer(function(input, output, session){
                                         ref = match_ref_df_good,
                                         air = match_air_df_good,
                                         wash = match_wash_df_good,
-                                        tv = match_tv_df_good)
+                                        tv = match_tv_df_good,
+                                        gas = match_gas_df_good,
+                                        hood = match_hood_df_good,
+                                        dish = match_dish_df_good)
                      n_df <- switch(input$CommentCat,
                                     ref = commentC_ref_good_n,
                                     air = commentC_air_good_n,
                                     wash = commentC_wash_good_n,
-                                    tv = commentC_tv_good_n)
+                                    tv = commentC_tv_good_n,
+                                    gas = commentC_gas_good_n,
+                                    hood = commentC_hood_good_n,
+                                    dish = commentC_dish_good_n)
                    }else{
                      match_df <- switch(input$CommentCat,
                                         ref = match_ref_df_poor,
                                         air = match_air_df_poor,
                                         wash = match_wash_df_poor,
-                                        tv = match_tv_df_poor)
+                                        tv = match_tv_df_poor,
+                                        gas = match_gas_df_poor,
+                                        hood = match_hood_df_poor,
+                                        dish = match_dish_df_poor)
                      n_df <- switch(input$CommentCat,
                                     ref = commentC_ref_poor_n,
                                     air = commentC_air_poor_n,
                                     wash = commentC_wash_poor_n,
-                                    tv = commentC_tv_poor_n)
+                                    tv = commentC_tv_poor_n,
+                                    gas = commentC_gas_poor_n,
+                                    hood = commentC_hood_poor_n,
+                                    dish = commentC_dish_poor_n)
                    }
                    creat_hc <- function(t){
                      table <- filter(match_df, brand == t)
