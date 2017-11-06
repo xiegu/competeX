@@ -53,6 +53,7 @@ sale <- hot_sale_info()
 search <- hot_search_info()
 comment <- comment_info()
 
+detail <- mutate(detail, brand = toupper(brand))
 com <- inner_join(com, score, by = c('id'= 'sku_id'))%>%unique
 com <- left_join(com, unique(select(detail, id, brand)), by = c('id' = 'id')) %>% unique
 

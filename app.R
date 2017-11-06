@@ -54,136 +54,31 @@ ui <- dashboardPage(skin = 'red',
                                 ),
                                 fluidRow(
                                   column(
-                                    width = 2,
+                                    width = 1,
                                     actionButton(inputId="startHelp1", label="Help", class="btn-success")
                                   ),
                                   column(
                                     width = 2,
                                     checkboxInput('Outlier', '是否包括价格极高/极低的商品？', value = TRUE)
+                                  ),
+                                  # column(
+                                  #   width = 1,
+                                  #   p('商品品类 ')
+                                  # ),
+                                  column(
+                                    width = 4,
+                                    selectizeInput('MultiCat', label = NULL,  multiple = TRUE,  choices = c(
+                                      '冰箱' = 'ref', 
+                                      '空调' = 'air',
+                                      '洗衣机' = 'wash', 
+                                      '电视' = 'tv',
+                                      '燃气灶' = 'gas',
+                                      '油烟机' = 'hood',
+                                      '洗碗机'= 'dish'), selected = c('ref', 'air', 'wash') )
                                   )
                                 ),
-                                fluidRow(
-                                  box(id = 'step1_1',
-                                      status = 'danger',
-                                      title = '冰箱最新价格全景',
-                                      width = 5,
-                                      highchartOutput('PriceRef', height = '400px')
-                                  ),
-                                  box(id = 'step1_2',
-                                      status = 'success',
-                                      title = '冰箱最新在售商品数',
-                                      width = 3,
-                                      highchartOutput('TopRef', height = '400px')
-                                  ),
-                                  box(id = 'step1_3',
-                                      status = 'primary',
-                                      title = '冰箱最新市场容量',
-                                      width = 4,
-                                      highchartOutput('SaleRef', height = '400px')
-                                  )
-                                ),
-                                fluidRow(
-                                  box(status = 'danger',
-                                      title = '空调最新价格全景',
-                                      width = 5,
-                                      highchartOutput('PriceAir', height = '400px')
-                                  ),
-                                  box(status = 'success',
-                                      title = '空调最新在售商品数',
-                                      width = 3,
-                                      highchartOutput('TopAir', height = '400px')
-                                  ),
-                                  box(status = 'primary',
-                                      title = '空调最新市场容量',
-                                      width = 4,
-                                      highchartOutput('SaleAir', height = '400px')
-                                  )
-                                ),
-                                fluidRow(
-                                  box(status = 'danger',
-                                      title ='洗衣机最新价格全景',
-                                      width = 5,
-                                      highchartOutput('PriceWash', height = '400px')
-                                  ),
-                                  box(status = 'success',
-                                      title = '洗衣机最新在售商品数',
-                                      width = 3,
-                                      highchartOutput('TopWash', height = '400px')
-                                  ),
-                                  box(status = 'primary',
-                                      title = '洗衣机最新市场容量',
-                                      width = 4,
-                                      highchartOutput('SaleWash', height = '400px')
-                                  )
-                                ),
-                                fluidRow(
-                                  box(status = 'danger',
-                                      title = '电视最新价格全景',
-                                      width = 5,
-                                      highchartOutput('PriceTV', height = '400px')
-                                  ),
-                                  box(status = 'success',
-                                      title = '电视最新在售商品数',
-                                      width = 3,
-                                      highchartOutput('TopTV', height = '400px')
-                                  ),
-                                  box(status = 'primary',
-                                      title = '电视最新市场容量',
-                                      width = 4,
-                                      highchartOutput('SaleTV', height = '400px')
-                                  )
-                                ),
-                                fluidRow(
-                                  box(status = 'danger',
-                                      title = '燃气灶最新价格全景',
-                                      width = 5,
-                                      highchartOutput('PriceGas', height = '400px')
-                                  ),
-                                  box(status = 'success',
-                                      title = '燃气灶最新在售商品数',
-                                      width = 3,
-                                      highchartOutput('TopGas', height = '400px')
-                                  ),
-                                  box(status = 'primary',
-                                      title = '燃气灶最新市场容量',
-                                      width = 4,
-                                      highchartOutput('SaleGas', height = '400px')
-                                  )
-                                ),
-                                fluidRow(
-                                  box(status = 'danger',
-                                      title = '油烟机最新价格全景',
-                                      width = 5,
-                                      highchartOutput('PriceHood', height = '400px')
-                                  ),
-                                  box(status = 'success',
-                                      title = '油烟机最新在售商品数',
-                                      width = 3,
-                                      highchartOutput('TopHood', height = '400px')
-                                  ),
-                                  box(status = 'primary',
-                                      title = '油烟机最新市场容量',
-                                      width = 4,
-                                      highchartOutput('SaleHood', height = '400px')
-                                  )
-                                ),
-                                fluidRow(
-                                  box(status = 'danger',
-                                      title = '洗碗机最新价格全景',
-                                      width = 5,
-                                      highchartOutput('PriceDish', height = '400px')
-                                  ),
-                                  box(status = 'success',
-                                      title = '洗碗机最新在售商品数',
-                                      width = 3,
-                                      highchartOutput('TopDish', height = '400px')
-                                  ),
-                                  box(status = 'primary',
-                                      title = '洗碗机最新市场容量',
-                                      width = 4,
-                                      highchartOutput('SaleDish', height = '400px')
-                                  )
-                                )
+                                uiOutput('ComProfile')
+                                
                         ),
                         tabItem(tabName = "CommentCrawl",
                                 fluidRow(
@@ -281,101 +176,23 @@ ui <- dashboardPage(skin = 'red',
                                     )
                                   )
                                 ),
+                                br(),
                                 fluidRow(
-                                  tabBox(id = 'step2_3',
-                                         title = NULL,
-                                         side = 'right',
-                                         width = 6,
-                                         tabPanel('最新热卖冰箱排行榜',
-                                                  #p('')
-                                                  dataTableOutput('SaleRefTop')
-                                         ),
-                                         tabPanel(
-                                           title = '最新热卖冰箱品牌占比',
-                                           highchartOutput('SaleBrandRef')
-                                         )
-                                  ),
-                                  tabBox(title = NULL,
-                                         side = 'right',
-                                         width = 6,
-                                         tabPanel('最新热卖空调排行榜',
-                                                  #p('')
-                                                  dataTableOutput('SaleAirTop')
-                                         ),
-                                         tabPanel(
-                                           title = '最新热卖空调品牌占比',
-                                           highchartOutput('SaleBrandAir')
-                                         )
+                                  column(
+                                    width = 4,
+                                    selectizeInput('MultiCat2', label = NULL, multiple = TRUE,  choices = c(
+                                      '冰箱' = 'ref',
+                                      '空调' = 'air',
+                                      '洗衣机' = 'wash', 
+                                      '电视' = 'tv',
+                                      '燃气灶' = 'gas',
+                                      '油烟机' = 'hood',
+                                      '洗碗机'= 'dish'), selected = c('ref', 'air', 'wash'))
                                   )
                                 ),
                                 fluidRow(
-                                  tabBox(title = NULL,
-                                         side = 'right',
-                                         width = 6,
-                                         tabPanel('最新热卖洗衣机排行榜',
-                                                  #p('')
-                                                  dataTableOutput('SaleWashTop')
-                                         ),
-                                         tabPanel(
-                                           title = '最新热卖洗衣机品牌占比',
-                                           highchartOutput('SaleBrandWash')
-                                         )
-                                  ),
-                                  tabBox(title = NULL,
-                                         side = 'right',
-                                         width = 6,
-                                         tabPanel('最新热卖电视排行榜',
-                                                  #p('')
-                                                  dataTableOutput('SaleTVTop')
-                                         ),
-                                         tabPanel(
-                                           title = '最新热卖电视品牌占比',
-                                           highchartOutput('SaleBrandTV')
-                                         )
-                                  )
-                                ),
-                                fluidRow(
-                                  tabBox(title = NULL,
-                                         side = 'right',
-                                         width = 6,
-                                         tabPanel('最新热卖燃气灶排行榜',
-                                                  #p('')
-                                                  dataTableOutput('SaleGasTop')
-                                         ),
-                                         tabPanel(
-                                           title = '最新热卖燃气灶品牌占比',
-                                           highchartOutput('SaleBrandGas')
-                                         )
-                                  ),
-                                  tabBox(title = NULL,
-                                         side = 'right',
-                                         width = 6,
-                                         tabPanel('最新热卖油烟机排行榜',
-                                                  #p('')
-                                                  dataTableOutput('SaleHoodTop')
-                                         ),
-                                         tabPanel(
-                                           title = '最新热卖油烟机品牌占比',
-                                           highchartOutput('SaleBrandHood')
-                                         )
-                                  )
-                                ),
-                                fluidRow(
-                                  
-                                  tabBox(title = NULL,
-                                         side = 'right',
-                                         width = 6,
-                                         tabPanel('最新热卖洗碗机排行榜',
-                                                  #p('')
-                                                  dataTableOutput('SaleDishTop')
-                                         ),
-                                         tabPanel(
-                                           title = '最新热卖洗碗机品牌占比',
-                                           highchartOutput('SaleBrandDish')
-                                         )
-                                  )
+                                uiOutput('HotSaleList')
                                 )
-                                
                         ),
                         tabItem(tabName = 'HotSearch',
                                 fluidRow(
@@ -424,191 +241,20 @@ ui <- dashboardPage(skin = 'red',
                                 fluidRow(
                                   column(width = 2,
                                          actionButton(inputId="startHelp4", label="Help", class="btn-success")
-                                  )
+                                  ),
+                                  column(width = 4,
+                                         selectizeInput('MultiCat3', label = NULL, multiple = TRUE, choices = c(
+                                           '冰箱' = 'ref', 
+                                           '空调' = 'air',
+                                           '洗衣机' = 'wash', 
+                                           '电视' = 'tv',
+                                           '燃气灶' = 'gas',
+                                           '油烟机' = 'hood',
+                                           '洗碗机'= 'dish'), selected = c('ref', 'air','wash'))
+                                         )
                                 ),
                                 br(),
-                                fluidRow(
-                                  box(id = 'step4_1',
-                                      status = 'info',
-                                      title = '冰箱最新客户品牌偏好度',
-                                      width = 4,
-                                      highchartOutput('ScoreRef', height = '600px')
-                                  ),
-                                  tabBox(
-                                    id = 'step4_2',
-                                    title = NULL,
-                                    width = 8,
-                                    side = 'right',
-                                    height = 'auto',
-                                    tabPanel(
-                                      title = '冰箱各品牌商品得分',
-                                      fluidRow(
-                                        column(width = 2,
-                                               selectInput('RefBrandSelector', label = '品牌', choices = unique(filter(score_full, category == 'ref')$brand))
-                                        )
-                                      ),
-                                      dataTableOutput('ScoreRefBrand')
-                                    ),
-                                    tabPanel(
-                                      title = '冰箱商品用户偏好得分排行榜',
-                                      dataTableOutput('ScoreRefTop')
-                                    )
-                                  )
-                                  
-                                ),
-                                fluidRow(
-                                  box(status = 'info',
-                                      title = '空调最新客户品牌偏好度',
-                                      width = 4,
-                                      highchartOutput('ScoreAir', height = '600px')
-                                  ),
-                                  tabBox(
-                                    title = NULL,
-                                    width = 8,
-                                    side = 'right',
-                                    tabPanel(
-                                      title = '空调各品牌商品得分',
-                                      fluidRow(
-                                        column(width = 2,
-                                               selectInput('AirBrandSelector', label = '品牌', choices = unique(filter(score_full, category == 'air')$brand))
-                                        )),
-                                      dataTableOutput('ScoreAirBrand')
-                                    ),
-                                    tabPanel(
-                                      title = '空调商品用户偏好排行榜',
-                                      dataTableOutput('ScoreAirTop')
-                                    )
-                                  )
-                                  
-                                ),
-                                fluidRow(
-                                  box(status = 'info',
-                                      title = '洗衣机最新客户品牌偏好度',
-                                      width = 4,
-                                      highchartOutput('ScoreWash', height = '600px')
-                                  ),
-                                  tabBox(
-                                    title = NULL,
-                                    side = 'right',
-                                    width = 8,
-                                    tabPanel(
-                                      title = '洗衣机各品牌商品得分',
-                                      fluidRow(
-                                        column(width = 2, 
-                                               selectInput('WashBrandSelector', label = '品牌', choices = unique(filter(score_full, category == 'wash')$brand))
-                                        )
-                                      ),
-                                      dataTableOutput('ScoreWashBrand')
-                                    ),
-                                    tabPanel(
-                                      title = '洗衣机商品用户偏好排行榜',
-                                      dataTableOutput('ScoreWashTop')
-                                    )
-                                  )
-                                  
-                                ),
-                                fluidRow(
-                                  box(status = 'info',
-                                      title = '电视最新客户品牌偏好度',
-                                      width = 4,
-                                      highchartOutput('ScoreTV', height = '600px')
-                                  ),
-                                  tabBox(
-                                    title = NULL,
-                                    side = 'right',
-                                    width = 8,
-                                    tabPanel(
-                                      title = '电视各品牌商品得分',
-                                      fluidRow(
-                                        column(width = 2,
-                                               selectInput('TVBrandSelector', label = '品牌', choices = unique(filter(score_full, category == 'tv')$brand))
-                                        )
-                                      ),
-                                      dataTableOutput('ScoreTVBrand')
-                                      #dataTableOutput('ScoreTVBrand', height = '400px')
-                                    ),
-                                    tabPanel(
-                                      title = '电视商品用户偏好排行榜',
-                                      dataTableOutput('ScoreTVTop')
-                                    )
-                                  )
-                                  
-                                ),
-                                fluidRow(
-                                  box(status = 'info',
-                                      title = '燃气灶最新客户品牌偏好度',
-                                      width = 4,
-                                      highchartOutput('ScoreGas', height = '600px')
-                                  ),
-                                  tabBox(
-                                    title = NULL,
-                                    width = 8,
-                                    side = 'right',
-                                    tabPanel(
-                                      title = '燃气灶各品牌商品得分',
-                                      fluidRow(
-                                        column(width = 2,
-                                               selectInput('GasBrandSelector', label = '品牌', choices = unique(filter(score_full, category == 'gas')$brand))
-                                        )),
-                                      dataTableOutput('ScoreGasBrand')
-                                    ),
-                                    tabPanel(
-                                      title = '燃气灶商品用户偏好排行榜',
-                                      dataTableOutput('ScoreGasTop')
-                                    )
-                                  )
-                                  
-                                ),
-                                fluidRow(
-                                  box(status = 'info',
-                                      title = '油烟机最新客户品牌偏好度',
-                                      width = 4,
-                                      highchartOutput('ScoreHood', height = '600px')
-                                  ),
-                                  tabBox(
-                                    title = NULL,
-                                    width = 8,
-                                    side = 'right',
-                                    tabPanel(
-                                      title = '油烟机各品牌商品得分',
-                                      fluidRow(
-                                        column(width = 2,
-                                               selectInput('HoodBrandSelector', label = '品牌', choices = unique(filter(score_full, category == 'hood')$brand))
-                                        )),
-                                      dataTableOutput('ScoreHoodBrand')
-                                    ),
-                                    tabPanel(
-                                      title = '油烟机商品用户偏好排行榜',
-                                      dataTableOutput('ScoreHoodTop')
-                                    )
-                                  )
-                                  
-                                ),
-                                fluidRow(
-                                  box(status = 'info',
-                                      title = '洗碗机最新客户品牌偏好度',
-                                      width = 4,
-                                      highchartOutput('ScoreDish', height = '600px')
-                                  ),
-                                  tabBox(
-                                    title = NULL,
-                                    width = 8,
-                                    side = 'right',
-                                    tabPanel(
-                                      title = '洗碗机各品牌商品得分',
-                                      fluidRow(
-                                        column(width = 2,
-                                               selectInput('DishBrandSelector', label = '品牌', choices = unique(filter(score_full, category == 'dish')$brand))
-                                        )),
-                                      dataTableOutput('ScoreDishBrand')
-                                    ),
-                                    tabPanel(
-                                      title = '洗碗机商品用户偏好排行榜',
-                                      dataTableOutput('ScoreDishTop')
-                                    )
-                                  )
-                                  
-                                )
+                                uiOutput('UserPref')
                         ),
                         tabItem(tabName = 'CommentSentiment',
                                 fluidRow(
@@ -856,6 +502,137 @@ server <- shinyServer(function(input, output, session){
       hc_legend(enabled = FALSE)
   })
   
+  output$ComProfile <- renderUI({
+    ui <- list(
+    ref = fluidRow(
+      box(id = 'step1_1',
+          status = 'danger',
+          title = '冰箱最新价格全景',
+          width = 5,
+          highchartOutput('PriceRef', height = '400px')
+      ),
+      box(id = 'step1_2',
+          status = 'success',
+          title = '冰箱最新在售商品数',
+          width = 3,
+          highchartOutput('TopRef', height = '400px')
+      ),
+      box(id = 'step1_3',
+          status = 'primary',
+          title = '冰箱最新市场容量',
+          width = 4,
+          highchartOutput('SaleRef', height = '400px')
+      )
+    ),
+    air = fluidRow(
+      box(status = 'danger',
+          title = '空调最新价格全景',
+          width = 5,
+          highchartOutput('PriceAir', height = '400px')
+      ),
+      box(status = 'success',
+          title = '空调最新在售商品数',
+          width = 3,
+          highchartOutput('TopAir', height = '400px')
+      ),
+      box(status = 'primary',
+          title = '空调最新市场容量',
+          width = 4,
+          highchartOutput('SaleAir', height = '400px')
+      )
+    ),
+    wash = fluidRow(
+      box(status = 'danger',
+          title ='洗衣机最新价格全景',
+          width = 5,
+          highchartOutput('PriceWash', height = '400px')
+      ),
+      box(status = 'success',
+          title = '洗衣机最新在售商品数',
+          width = 3,
+          highchartOutput('TopWash', height = '400px')
+      ),
+      box(status = 'primary',
+          title = '洗衣机最新市场容量',
+          width = 4,
+          highchartOutput('SaleWash', height = '400px')
+      )
+    ),
+    tv = fluidRow(
+      box(status = 'danger',
+          title = '电视最新价格全景',
+          width = 5,
+          highchartOutput('PriceTV', height = '400px')
+      ),
+      box(status = 'success',
+          title = '电视最新在售商品数',
+          width = 3,
+          highchartOutput('TopTV', height = '400px')
+      ),
+      box(status = 'primary',
+          title = '电视最新市场容量',
+          width = 4,
+          highchartOutput('SaleTV', height = '400px')
+      )
+    ),
+    gas = fluidRow(
+      box(status = 'danger',
+          title = '燃气灶最新价格全景',
+          width = 5,
+          highchartOutput('PriceGas', height = '400px')
+      ),
+      box(status = 'success',
+          title = '燃气灶最新在售商品数',
+          width = 3,
+          highchartOutput('TopGas', height = '400px')
+      ),
+      box(status = 'primary',
+          title = '燃气灶最新市场容量',
+          width = 4,
+          highchartOutput('SaleGas', height = '400px')
+      )
+    ),
+    hood = fluidRow(
+      box(status = 'danger',
+          title = '油烟机最新价格全景',
+          width = 5,
+          highchartOutput('PriceHood', height = '400px')
+      ),
+      box(status = 'success',
+          title = '油烟机最新在售商品数',
+          width = 3,
+          highchartOutput('TopHood', height = '400px')
+      ),
+      box(status = 'primary',
+          title = '油烟机最新市场容量',
+          width = 4,
+          highchartOutput('SaleHood', height = '400px')
+      )
+    ),
+    dish = fluidRow(
+      box(status = 'danger',
+          title = '洗碗机最新价格全景',
+          width = 5,
+          highchartOutput('PriceDish', height = '400px')
+      ),
+      box(status = 'success',
+          title = '洗碗机最新在售商品数',
+          width = 3,
+          highchartOutput('TopDish', height = '400px')
+      ),
+      box(status = 'primary',
+          title = '洗碗机最新市场容量',
+          width = 4,
+          highchartOutput('SaleDish', height = '400px')
+      )
+    )
+    )
+    
+    tagList(ui[input$MultiCat])
+    
+    
+  })
+  
   output$RefWord <- renderWordcloud2({
     word <- table(hot_sale_cat_key$ref)%>%as.data.frame%>%subset(., !Var1%in%stop_words$ref)%>%arrange(-Freq)%>%head(50)
     wordcloud2(word, rotateRatio = 0, color= ifelse(word$Freq > 25, '#d62d20', 'grey'))
@@ -1082,6 +859,97 @@ server <- shinyServer(function(input, output, session){
         backgroundColor = styleEqual(
           unique(sale_dish$brand), color_brand[1:length(unique(sale_dish$brand))])
       )
+  })
+  
+  output$HotSaleList <- renderUI({
+    ui <- list(
+        ref = tabBox(id = 'step2_3',
+               title = NULL,
+               side = 'right',
+               width = 6,
+               tabPanel('最新热卖冰箱排行榜',
+                        #p('')
+                        dataTableOutput('SaleRefTop')
+               ),
+               tabPanel(
+                 title = '最新热卖冰箱品牌占比',
+                 highchartOutput('SaleBrandRef')
+               )
+        ),
+        air = tabBox(title = NULL,
+               side = 'right',
+               width = 6,
+               tabPanel('最新热卖空调排行榜',
+                        #p('')
+                        dataTableOutput('SaleAirTop')
+               ),
+               tabPanel(
+                 title = '最新热卖空调品牌占比',
+                 highchartOutput('SaleBrandAir')
+               )
+      ),
+        wash = tabBox(title = NULL,
+               side = 'right',
+               width = 6,
+               tabPanel('最新热卖洗衣机排行榜',
+                        #p('')
+                        dataTableOutput('SaleWashTop')
+               ),
+               tabPanel(
+                 title = '最新热卖洗衣机品牌占比',
+                 highchartOutput('SaleBrandWash')
+               )
+        ),
+        tv = tabBox(title = NULL,
+               side = 'right',
+               width = 6,
+               tabPanel('最新热卖电视排行榜',
+                        #p('')
+                        dataTableOutput('SaleTVTop')
+               ),
+               tabPanel(
+                 title = '最新热卖电视品牌占比',
+                 highchartOutput('SaleBrandTV')
+               )
+      ),
+        gas = tabBox(title = NULL,
+               side = 'right',
+               width = 6,
+               tabPanel('最新热卖燃气灶排行榜',
+                        #p('')
+                        dataTableOutput('SaleGasTop')
+               ),
+               tabPanel(
+                 title = '最新热卖燃气灶品牌占比',
+                 highchartOutput('SaleBrandGas')
+               )
+        ),
+        hood = tabBox(title = NULL,
+               side = 'right',
+               width = 6,
+               tabPanel('最新热卖油烟机排行榜',
+                        #p('')
+                        dataTableOutput('SaleHoodTop')
+               ),
+               tabPanel(
+                 title = '最新热卖油烟机品牌占比',
+                 highchartOutput('SaleBrandHood')
+               )
+      ),
+        dish = tabBox(title = NULL,
+               side = 'right',
+               width = 6,
+               tabPanel('最新热卖洗碗机排行榜',
+                        #p('')
+                        dataTableOutput('SaleDishTop')
+               ),
+               tabPanel(
+                 title = '最新热卖洗碗机品牌占比',
+                 highchartOutput('SaleBrandDish')
+               )
+        )
+    )
+    tagList(ui[input$MultiCat2])
   })
   output$HotSearchBar <- renderHighchart({
    table <- filter(search_table, category != 'mobile') %>% select(word, color_2, count) %>% rename(name = word, color = color_2, y = count)
@@ -1368,6 +1236,192 @@ server <- shinyServer(function(input, output, session){
       )
   })
   
+  output$UserPref <- renderUI({
+    ui <- list(
+      ref = fluidRow(
+        box(id = 'step4_1',
+            status = 'info',
+            title = '冰箱最新客户品牌偏好度',
+            width = 4,
+            highchartOutput('ScoreRef', height = '600px')
+        ),
+        tabBox(
+          id = 'step4_2',
+          title = NULL,
+          width = 8,
+          side = 'right',
+          height = 'auto',
+          tabPanel(
+            title = '冰箱各品牌商品得分',
+            fluidRow(
+              column(width = 2,
+                     selectInput('RefBrandSelector', label = '品牌', choices = unique(filter(score_full, category == 'ref')$brand))
+              )
+            ),
+            dataTableOutput('ScoreRefBrand')
+          ),
+          tabPanel(
+            title = '冰箱商品用户偏好得分排行榜',
+            dataTableOutput('ScoreRefTop')
+          )
+        )
+        
+      ),
+      air = fluidRow(
+        box(status = 'info',
+            title = '空调最新客户品牌偏好度',
+            width = 4,
+            highchartOutput('ScoreAir', height = '600px')
+        ),
+        tabBox(
+          title = NULL,
+          width = 8,
+          side = 'right',
+          tabPanel(
+            title = '空调各品牌商品得分',
+            fluidRow(
+              column(width = 2,
+                     selectInput('AirBrandSelector', label = '品牌', choices = unique(filter(score_full, category == 'air')$brand))
+              )),
+            dataTableOutput('ScoreAirBrand')
+          ),
+          tabPanel(
+            title = '空调商品用户偏好排行榜',
+            dataTableOutput('ScoreAirTop')
+          )
+        )
+        
+      ),
+      wash = fluidRow(
+        box(status = 'info',
+            title = '洗衣机最新客户品牌偏好度',
+            width = 4,
+            highchartOutput('ScoreWash', height = '600px')
+        ),
+        tabBox(
+          title = NULL,
+          side = 'right',
+          width = 8,
+          tabPanel(
+            title = '洗衣机各品牌商品得分',
+            fluidRow(
+              column(width = 2, 
+                     selectInput('WashBrandSelector', label = '品牌', choices = unique(filter(score_full, category == 'wash')$brand))
+              )
+            ),
+            dataTableOutput('ScoreWashBrand')
+          ),
+          tabPanel(
+            title = '洗衣机商品用户偏好排行榜',
+            dataTableOutput('ScoreWashTop')
+          )
+        )
+        
+      ),
+      tv = fluidRow(
+        box(status = 'info',
+            title = '电视最新客户品牌偏好度',
+            width = 4,
+            highchartOutput('ScoreTV', height = '600px')
+        ),
+        tabBox(
+          title = NULL,
+          side = 'right',
+          width = 8,
+          tabPanel(
+            title = '电视各品牌商品得分',
+            fluidRow(
+              column(width = 2,
+                     selectInput('TVBrandSelector', label = '品牌', choices = unique(filter(score_full, category == 'tv')$brand))
+              )
+            ),
+            dataTableOutput('ScoreTVBrand')
+            #dataTableOutput('ScoreTVBrand', height = '400px')
+          ),
+          tabPanel(
+            title = '电视商品用户偏好排行榜',
+            dataTableOutput('ScoreTVTop')
+          )
+        )
+        
+      ),
+      gas = fluidRow(
+        box(status = 'info',
+            title = '燃气灶最新客户品牌偏好度',
+            width = 4,
+            highchartOutput('ScoreGas', height = '600px')
+        ),
+        tabBox(
+          title = NULL,
+          width = 8,
+          side = 'right',
+          tabPanel(
+            title = '燃气灶各品牌商品得分',
+            fluidRow(
+              column(width = 2,
+                     selectInput('GasBrandSelector', label = '品牌', choices = unique(filter(score_full, category == 'gas')$brand))
+              )),
+            dataTableOutput('ScoreGasBrand')
+          ),
+          tabPanel(
+            title = '燃气灶商品用户偏好排行榜',
+            dataTableOutput('ScoreGasTop')
+          )
+        )
+        
+      ),
+      hood = fluidRow(
+        box(status = 'info',
+            title = '油烟机最新客户品牌偏好度',
+            width = 4,
+            highchartOutput('ScoreHood', height = '600px')
+        ),
+        tabBox(
+          title = NULL,
+          width = 8,
+          side = 'right',
+          tabPanel(
+            title = '油烟机各品牌商品得分',
+            fluidRow(
+              column(width = 2,
+                     selectInput('HoodBrandSelector', label = '品牌', choices = unique(filter(score_full, category == 'hood')$brand))
+              )),
+            dataTableOutput('ScoreHoodBrand')
+          ),
+          tabPanel(
+            title = '油烟机商品用户偏好排行榜',
+            dataTableOutput('ScoreHoodTop')
+          )
+        )
+        
+      ),
+      dish = fluidRow(
+        box(status = 'info',
+            title = '洗碗机最新客户品牌偏好度',
+            width = 4,
+            highchartOutput('ScoreDish', height = '600px')
+        ),
+        tabBox(
+          title = NULL,
+          width = 8,
+          side = 'right',
+          tabPanel(
+            title = '洗碗机各品牌商品得分',
+            fluidRow(
+              column(width = 2,
+                     selectInput('DishBrandSelector', label = '品牌', choices = unique(filter(score_full, category == 'dish')$brand))
+              )),
+            dataTableOutput('ScoreDishBrand')
+          ),
+          tabPanel(
+            title = '洗碗机商品用户偏好排行榜',
+            dataTableOutput('ScoreDishTop')
+          )
+        )
+      )
+    )
+    tagList(ui[input$MultiCat3])
+  })
   output$CommentBrand <- renderUI({
     withProgress(message = '正在加载...', value = 0,
                  {
