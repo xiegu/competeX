@@ -25,7 +25,14 @@ ui <- dashboardPage(skin = 'red',
                         menuItem('热门搜索词分析', tabName = 'HotSearch', icon = icon('th')),
                         menuItem('评论抓取监视', tabName = "CommentCrawl", icon = icon("dashboard")),
                         menuItem('用户偏好画像', tabName = 'CommentScore', icon = icon('th')),
-                        menuItem('用户感知画像', tabName = 'CommentSentiment', icon = icon('th'))
+                        menuItem('用户感知画像', tabName = 'CommentSentiment', icon = icon('th')),
+
+                        column(
+                          width =12,
+                          hr(),
+                          h5(icon('refresh', class = 'fa-spin'), '数据更新时间: '),
+                          strong(com$update_time[1])
+                        )
                       )
                     ),
                     dashboardBody(
@@ -40,18 +47,22 @@ ui <- dashboardPage(skin = 'red',
                       
                       # Include javascript code to make shiny communicate with introJS
                       includeScript("www/app.js"),
-                      
+#                       tags$style(HTML("
+# 
+# 
+# .box.box-danger>.box-body {
+#   color:#fff;
+#   background:#666666
+#                     }
+# 
+# .box.box-solid.box-primary{
+# border-bottom-color:#666666;
+# border-left-color:#666666;
+# border-right-color:#666666;
+# border-top-color:#666666;
+# } ")),
                       tabItems(
                         tabItem(tabName = 'Competitor',
-                                  column(
-                                    offset = 10,
-                                    width = 2,
-                                    box(status = 'danger',
-                                        title = p(icon('refresh', class = 'fa-spin'), '数据更新时间: '),
-                                        width = NULL,
-                                        h4(strong(com$update_time[1]))
-                                  )
-                                ),
                                 fluidRow(
                                   column(
                                     width = 1,
@@ -61,10 +72,7 @@ ui <- dashboardPage(skin = 'red',
                                     width = 2,
                                     checkboxInput('Outlier', '是否包括价格极高/极低的商品？', value = TRUE)
                                   ),
-                                  # column(
-                                  #   width = 1,
-                                  #   p('商品品类 ')
-                                  # ),
+                                  
                                   column(
                                     width = 4,
                                     selectizeInput('MultiCat', label = NULL,  multiple = TRUE,  choices = c(
@@ -74,9 +82,10 @@ ui <- dashboardPage(skin = 'red',
                                       '电视' = 'tv',
                                       '燃气灶' = 'gas',
                                       '油烟机' = 'hood',
-                                      '洗碗机'= 'dish'), selected = c('ref', 'air', 'wash') )
+                                      '洗碗机'= 'dish'), selected = c('ref', 'air', 'wash'), options = list(maxItems = 4) )
                                   )
                                 ),
+                                
                                 uiOutput('ComProfile')
                                 
                         ),
@@ -103,26 +112,7 @@ ui <- dashboardPage(skin = 'red',
                         ),
                         tabItem(tabName = 'HotSales',
                                 fluidRow(
-                                  column(
-                                    offset = 10,
-                                    width = 2,
-                                    box(status = 'danger',
-                                        title = p(icon('refresh', class = 'fa-spin'), '数据更新时间: '),
-                                        width = NULL,
-                                        h4(strong(com$update_time[1]))
-                                    )
-                                  )
-                                ),
-                                # fluidRow(icon = icon('refresh', class = 'fa-spin fa-inverse'),
-                                #   column(width = 2,
-                                #          selectInput('HotCategory', label = '类别', choices = unique(sale$category))
-                                #   ),
-                                #   column(width = 2,
-                                #          uiOutput('HotBrand')
-                                #   )
-                                # )
-                                fluidRow(
-                                  column(width = 2,
+                                  column(width = 1,
                                          actionButton(inputId="startHelp2", label="Help", class="btn-success")
                                   )
                                 ),
@@ -187,7 +177,7 @@ ui <- dashboardPage(skin = 'red',
                                       '电视' = 'tv',
                                       '燃气灶' = 'gas',
                                       '油烟机' = 'hood',
-                                      '洗碗机'= 'dish'), selected = c('ref', 'air', 'wash'))
+                                      '洗碗机'= 'dish'), selected = c('ref', 'air', 'wash'), options = list(maxItems = 4))
                                   )
                                 ),
                                 fluidRow(
@@ -195,17 +185,6 @@ ui <- dashboardPage(skin = 'red',
                                 )
                         ),
                         tabItem(tabName = 'HotSearch',
-                                fluidRow(
-                                  column(
-                                    offset = 10,
-                                    width = 2,
-                                    box(status = 'danger',
-                                        title = p(icon('refresh', class = 'fa-spin'), '数据更新时间: '),
-                                        width = NULL,
-                                        h4(strong(com$update_time[1]))
-                                    )
-                                  )
-                                ),
                                 fluidRow(
                                   column(width = 2,
                                          actionButton(inputId="startHelp3", label="Help", class="btn-success")
@@ -228,18 +207,7 @@ ui <- dashboardPage(skin = 'red',
                         ),
                         tabItem(tabName = 'CommentScore',
                                 fluidRow(
-                                  column(
-                                    offset = 10,
-                                    width = 2,
-                                    box(status = 'danger',
-                                        title = p(icon('refresh', class = 'fa-spin'), '数据更新时间: '),
-                                        width = NULL,
-                                        h4(strong(com$update_time[1]))
-                                    )
-                                  )
-                                ),
-                                fluidRow(
-                                  column(width = 2,
+                                  column(width = 1,
                                          actionButton(inputId="startHelp4", label="Help", class="btn-success")
                                   ),
                                   column(width = 4,
@@ -250,26 +218,16 @@ ui <- dashboardPage(skin = 'red',
                                            '电视' = 'tv',
                                            '燃气灶' = 'gas',
                                            '油烟机' = 'hood',
-                                           '洗碗机'= 'dish'), selected = c('ref', 'air','wash'))
-                                         )
+                                           '洗碗机'= 'dish'), selected = c('ref', 'air','wash'), options = list(maxItems = 4))
+                                         
+                                  )
                                 ),
-                                br(),
+                               
                                 uiOutput('UserPref')
                         ),
                         tabItem(tabName = 'CommentSentiment',
                                 fluidRow(
-                                  column(
-                                    offset = 10,
-                                    width = 2,
-                                    box(status = 'danger',
-                                        title = p(icon('refresh', class = 'fa-spin'), '数据更新时间: '),
-                                        width = NULL,
-                                        h4(strong(com$update_time[1]))
-                                    )
-                                  )
-                                ),
-                                fluidRow(
-                                  column(width = 2,
+                                  column(width = 1,
                                          actionButton(inputId="startHelp5", label="Help", class="btn-success")
                                   )
                                 ),
@@ -353,7 +311,7 @@ server <- shinyServer(function(input, output, session){
       #hc_title(text = '冰箱在售商品数')%>%
       hc_chart(type ='bar')%>%
       hc_xAxis(categories = head(top_ref,10)$brand)%>%
-      hc_add_series(data = head(top_ref,10)$num, color = '#d62d20', name = '商品数')%>%
+      hc_add_series(data = head(top_ref,10)$num, color = '#fd8282', name = '商品数')%>%
       hc_legend(enabled = FALSE)
   })
   
@@ -362,7 +320,7 @@ server <- shinyServer(function(input, output, session){
       #hc_title(text = '空调在售商品数')%>%
       hc_chart(type ='bar')%>%
       hc_xAxis(categories = head(top_air,10)$brand)%>%
-      hc_add_series(data = head(top_air,10)$num, color = '#0057e7', name = '商品数')%>%
+      hc_add_series(data = head(top_air,10)$num, color = '#1b75bb', name = '商品数')%>%
       hc_legend(enabled = FALSE)
   })
   
@@ -371,7 +329,7 @@ server <- shinyServer(function(input, output, session){
       #hc_title(text = '洗衣机在售商品数')%>%
       hc_chart(type ='bar')%>%
       hc_xAxis(categories = head(top_wash,10)$brand)%>%
-      hc_add_series(data = head(top_wash,10)$num, color = '#008744', name = '商品数')%>%
+      hc_add_series(data = head(top_wash,10)$num, color = '#43e8d8', name = '商品数')%>%
       hc_legend(enabled = FALSE)
   })
   
@@ -380,7 +338,7 @@ server <- shinyServer(function(input, output, session){
       #hc_title(text = '电视在售商品数')%>%
       hc_chart(type ='bar')%>%
       hc_xAxis(categories = head(top_tv,10)$brand)%>%
-      hc_add_series(data = head(top_tv,10)$num, color = '#ffa700', name = '商品数')%>%
+      hc_add_series(data = head(top_tv,10)$num, color = '#ffa800', name = '商品数')%>%
       hc_legend(enabled = FALSE)
   })
   
@@ -389,7 +347,7 @@ server <- shinyServer(function(input, output, session){
       #hc_title(text = '电视在售商品数')%>%
       hc_chart(type ='bar')%>%
       hc_xAxis(categories = head(top_gas,10)$brand)%>%
-      hc_add_series(data = head(top_gas,10)$num, color = '#B2DF8A', name = '商品数')%>%
+      hc_add_series(data = head(top_gas,10)$num, color = '#abc7b9', name = '商品数')%>%
       hc_legend(enabled = FALSE)
   })
   
@@ -398,7 +356,7 @@ server <- shinyServer(function(input, output, session){
       #hc_title(text = '电视在售商品数')%>%
       hc_chart(type ='bar')%>%
       hc_xAxis(categories = head(top_hood,10)$brand)%>%
-      hc_add_series(data = head(top_hood,10)$num, color = '#A6CEE3', name = '商品数')%>%
+      hc_add_series(data = head(top_hood,10)$num, color = '#ab7ac1', name = '商品数')%>%
       hc_legend(enabled = FALSE)
   })
   
@@ -407,98 +365,98 @@ server <- shinyServer(function(input, output, session){
       #hc_title(text = '电视在售商品数')%>%
       hc_chart(type ='bar')%>%
       hc_xAxis(categories = head(top_dish,10)$brand)%>%
-      hc_add_series(data = head(top_dish,10)$num, color = '#1F78B4', name = '商品数')%>%
+      hc_add_series(data = head(top_dish,10)$num, color = '#ff7c4c', name = '商品数')%>%
       hc_legend(enabled = FALSE)
   })
   
   output$PriceRef <- renderHighchart({
     highchart()%>%
       #hc_title(text = '冰箱最新价格全景')%>%
-      hc_add_series_boxplot(x = com_ref$p, by = com_ref$brand, name = 'Price', color = '#d62d20', outliers = input$Outlier)%>%
+      hc_add_series_boxplot(x = com_ref$p, by = com_ref$brand, name = 'Price', color = '#fd8282', outliers = input$Outlier)%>%
       hc_legend(enabled = FALSE)
   })
   
   output$PriceAir <- renderHighchart({
     highchart()%>%
       #hc_title(text = '空调最新价格全景')%>%
-      hc_add_series_boxplot(x = com_air$p, by =com_air$brand, name = 'Price', color = '#0057e7', outliers = input$Outlier)%>%
+      hc_add_series_boxplot(x = com_air$p, by =com_air$brand, name = 'Price', color = '#1b75bb', outliers = input$Outlier)%>%
       hc_legend(enabled = FALSE)
   })
   
   output$PriceWash <- renderHighchart({
     highchart()%>%
       #hc_title(text = '洗衣机最新价格全景')%>%
-      hc_add_series_boxplot(x = com_wash$p, by = com_wash$brand, name = 'Price', color = '#008744', outliers = input$Outlier)%>%
+      hc_add_series_boxplot(x = com_wash$p, by = com_wash$brand, name = 'Price', color = '#43e8d8', outliers = input$Outlier)%>%
       hc_legend(enabled = FALSE)
   })
   
   output$PriceTV <- renderHighchart({
     highchart()%>%
       #hc_title(text = '电视最新价格全景')%>%
-      hc_add_series_boxplot(x = com_tv$p, by = com_tv$brand, name = 'Price', color = '#ffa700', outliers = input$Outlier)%>%
+      hc_add_series_boxplot(x = com_tv$p, by = com_tv$brand, name = 'Price', color = '#ffa800', outliers = input$Outlier)%>%
       hc_legend(enabled = FALSE)
   })
   
   output$PriceGas <- renderHighchart({
     highchart()%>%
       #hc_title(text = '洗衣机最新价格全景')%>%
-      hc_add_series_boxplot(x = com_gas$p, by = com_gas$brand, name = 'Price', color = '#B2DF8A', outliers = input$Outlier)%>%
+      hc_add_series_boxplot(x = com_gas$p, by = com_gas$brand, name = 'Price', color = '#abc7b9', outliers = input$Outlier)%>%
       hc_legend(enabled = FALSE)
   })
   
   output$PriceHood <- renderHighchart({
     highchart()%>%
       #hc_title(text = '洗衣机最新价格全景')%>%
-      hc_add_series_boxplot(x = com_hood$p, by = com_hood$brand, name = 'Price', color = '#A6CEE3', outliers = input$Outlier)%>%
+      hc_add_series_boxplot(x = com_hood$p, by = com_hood$brand, name = 'Price', color = '#ab7ac1', outliers = input$Outlier)%>%
       hc_legend(enabled = FALSE)
   })
   
   output$PriceDish <- renderHighchart({
     highchart()%>%
       #hc_title(text = '洗衣机最新价格全景')%>%
-      hc_add_series_boxplot(x = com_dish$p, by = com_dish$brand, name = 'Price', color = '#1F78B4', outliers = input$Outlier)%>%
+      hc_add_series_boxplot(x = com_dish$p, by = com_dish$brand, name = 'Price', color = '#ff7c4c', outliers = input$Outlier)%>%
       hc_legend(enabled = FALSE)
   })
 
   output$SaleRef <- renderHighchart({
     hchart(top_ref, 'treemap', hcaes(x = brand, value = sale, color = sale))%>%
-      hc_colorAxis(minColor= '#FFFFFF',maxColor= '#d62d20') %>%
+      hc_colorAxis(minColor= '#FFFFFF',maxColor= '#fd8282') %>%
       hc_legend(enabled = FALSE)
   })
   
   output$SaleAir <- renderHighchart({
     hchart(top_air, 'treemap', hcaes(x = brand, value = sale, color = sale))%>%
-      hc_colorAxis(minColor= '#FFFFFF',maxColor= '#0057e7') %>%
+      hc_colorAxis(minColor= '#FFFFFF',maxColor= '#1b75bb') %>%
       hc_legend(enabled = FALSE)
   })
   
   output$SaleWash <- renderHighchart({
     hchart(top_wash, 'treemap', hcaes(x = brand, value = sale, color = sale)) %>%
-      hc_colorAxis(minColor= '#FFFFFF',maxColor= '#008744') %>%
+      hc_colorAxis(minColor= '#FFFFFF',maxColor= '#43e8d8') %>%
       hc_legend(enabled = FALSE)
   })
   
   output$SaleTV <- renderHighchart({
     hchart(top_tv, 'treemap', hcaes(x = brand, value = sale, color = sale))%>%
-      hc_colorAxis(minColor= '#FFFFFF',maxColor= '#ffa700') %>%
+      hc_colorAxis(minColor= '#FFFFFF',maxColor= '#ffa800') %>%
       hc_legend(enabled = FALSE)
   })
   
   output$SaleHood <- renderHighchart({
     hchart(top_hood, 'treemap', hcaes(x = brand, value = sale, color = sale))%>%
-      hc_colorAxis(minColor= '#FFFFFF',maxColor= '#A6CEE3') %>%
+      hc_colorAxis(minColor= '#FFFFFF',maxColor= '#ab7ac1') %>%
       hc_legend(enabled = FALSE)
   })
   
   output$SaleDish <- renderHighchart({
     hchart(top_dish, 'treemap', hcaes(x = brand, value = sale, color = sale))%>%
-      hc_colorAxis(minColor= '#FFFFFF',maxColor= '#1F78B4') %>%
+      hc_colorAxis(minColor= '#FFFFFF',maxColor= '#ff7c4c') %>%
       hc_legend(enabled = FALSE)
   })
   
   output$SaleGas <- renderHighchart({
     hchart(top_gas, 'treemap', hcaes(x = brand, value = sale, color = sale))%>%
-      hc_colorAxis(minColor= '#FFFFFF',maxColor= '#B2DF8A') %>%
+      hc_colorAxis(minColor= '#FFFFFF',maxColor= '#abc7b9') %>%
       hc_legend(enabled = FALSE)
   })
   
@@ -635,37 +593,37 @@ server <- shinyServer(function(input, output, session){
   
   output$RefWord <- renderWordcloud2({
     word <- table(hot_sale_cat_key$ref)%>%as.data.frame%>%subset(., !Var1%in%stop_words$ref)%>%arrange(-Freq)%>%head(50)
-    wordcloud2(word, rotateRatio = 0, color= ifelse(word$Freq > 25, '#d62d20', 'grey'))
+    wordcloud2(word, rotateRatio = 0, color= ifelse(word$Freq > 25, '#fd8282', 'grey'))
   })
   
   output$AirWord <- renderWordcloud2({
     word <- table(hot_sale_cat_key$air)%>%as.data.frame%>%subset(., !Var1%in%stop_words$air)%>%arrange(-Freq)%>%head(50)
-    wordcloud2(word, rotateRatio = 0, color = ifelse(word$Freq> 25, '#0057e7', 'grey'))
+    wordcloud2(word, rotateRatio = 0, color = ifelse(word$Freq> 25, '#1b75bb', 'grey'))
   })
   
   output$WashWord <- renderWordcloud2({
     word <- table(hot_sale_cat_key$wash)%>%as.data.frame%>%subset(., !Var1%in%stop_words$wash)%>%arrange(-Freq)%>%head(50)
-    wordcloud2(word, rotateRatio = 0, color = ifelse(word$Freq > 25 , '#008744', 'grey'))
+    wordcloud2(word, rotateRatio = 0, color = ifelse(word$Freq > 25 , '#43e8d8', 'grey'))
   })
   
   output$TVWord <- renderWordcloud2({
     word <- table(hot_sale_cat_key$tv)%>%as.data.frame%>%subset(., !Var1%in%stop_words$tv)%>%arrange(-Freq)%>%head(50)
-    wordcloud2(word, rotateRatio = 0, color = ifelse(word$Freq > 25, '#ffa700', 'grey'))
+    wordcloud2(word, rotateRatio = 0, color = ifelse(word$Freq > 25, '#ffa800', 'grey'))
   })
   
   output$HoodWord <- renderWordcloud2({
     word <- table(hot_sale_cat_key$hood)%>%as.data.frame%>%subset(., !Var1%in%stop_words$hood)%>%arrange(-Freq)%>%head(50)
-    wordcloud2(word, rotateRatio = 0, color = ifelse(word$Freq > 25, '#A6CEE3', 'grey'))
+    wordcloud2(word, rotateRatio = 0, color = ifelse(word$Freq > 25, '#ab7ac1', 'grey'))
   })
   
   output$GasWord <- renderWordcloud2({
     word <- table(hot_sale_cat_key$gas)%>%as.data.frame%>%subset(., !Var1%in%stop_words$gas)%>%arrange(-Freq)%>%head(50)
-    wordcloud2(word, rotateRatio = 0, color = ifelse(word$Freq > 25, '#B2DF8A', 'grey'))
+    wordcloud2(word, rotateRatio = 0, color = ifelse(word$Freq > 25, '#abc7b9', 'grey'))
   })
   
   output$DishWord <- renderWordcloud2({
     word <- table(hot_sale_cat_key$dish)%>%as.data.frame%>%subset(., !Var1%in%stop_words$dish)%>%arrange(-Freq)%>%head(50)
-    wordcloud2(word, rotateRatio = 0, color = ifelse(word$Freq > 15, '#1F78B4', 'grey'))
+    wordcloud2(word, rotateRatio = 0, color = ifelse(word$Freq > 15, '#ff7c4c', 'grey'))
   })
   
   output$HotBrand <- renderUI({
@@ -1005,8 +963,8 @@ server <- shinyServer(function(input, output, session){
      #hc_yAxis(labels= list(format='{function() {return Math.abs(value)}}')) %>%
       hc_xAxis(categories = table$brand, reversed = FALSE)%>%
       hc_xAxis(categories = table$brand, opposite = TRUE, reversed = FALSE) %>%
-      hc_add_series(data = table$adj_good_rate, name = '相对好评率', color = '#d62d20', label = list(step = 1))%>%
-      hc_add_series(data = -table$adj_poor_rate, name = '相对差评率', color = 'black', label = list(step = 1)) %>%
+      hc_add_series(data = table$adj_good_rate, name = '相对好评率', color = '#fd8282', label = list(step = 1))%>%
+      hc_add_series(data = -table$adj_poor_rate, name = '相对差评率', color = '#727272', label = list(step = 1)) %>%
       hc_plotOptions(series = list(stacking = 'normal'))%>%
       hc_tooltip(pointFormat = '{series.name}: {point.y: .3f}') %>% 
       hc_legend(enabled = TRUE) %>%
@@ -1023,8 +981,8 @@ server <- shinyServer(function(input, output, session){
       #hc_yAxis(labels= list(format='{function() {return Math.abs(value)}}')) %>%
       hc_xAxis(categories = table$brand, reversed = FALSE)%>%
       hc_xAxis(categories = table$brand, opposite = TRUE, reversed = FALSE) %>%
-      hc_add_series(data = table$adj_good_rate, name = '相对好评率', color = '#0057e7', label = list(step = 1))%>%
-      hc_add_series(data = -table$adj_poor_rate, name = '相对差评率', color = 'black', label = list(step = 1)) %>%
+      hc_add_series(data = table$adj_good_rate, name = '相对好评率', color = '#1b75bb', label = list(step = 1))%>%
+      hc_add_series(data = -table$adj_poor_rate, name = '相对差评率', color = '#727272', label = list(step = 1)) %>%
       hc_plotOptions(series = list(stacking = 'normal'))%>%
       hc_tooltip(pointFormat = '{series.name}: {point.y: .3f}') %>% 
       hc_legend(enabled = TRUE) %>%
@@ -1041,8 +999,8 @@ server <- shinyServer(function(input, output, session){
       #hc_yAxis(labels= list(format='{function() {return Math.abs(value)}}')) %>%
       hc_xAxis(categories = table$brand, reversed = FALSE)%>%
       hc_xAxis(categories = table$brand, opposite = TRUE, reversed = FALSE) %>%
-      hc_add_series(data = table$adj_good_rate, name = '相对好评率', color = '#008744', label = list(step = 1))%>%
-      hc_add_series(data = -table$adj_poor_rate, name = '相对差评率', color = 'black', label = list(step = 1)) %>%
+      hc_add_series(data = table$adj_good_rate, name = '相对好评率', color = '#43e8d8', label = list(step = 1))%>%
+      hc_add_series(data = -table$adj_poor_rate, name = '相对差评率', color = '#727272', label = list(step = 1)) %>%
       hc_plotOptions(series = list(stacking = 'normal'))%>%
       hc_tooltip(pointFormat = '{series.name}: {point.y: .3f}') %>% 
       hc_legend(enabled = TRUE) %>%
@@ -1060,8 +1018,8 @@ server <- shinyServer(function(input, output, session){
       #hc_yAxis(labels= list(format='{function() {return Math.abs(value)}}')) %>%
       hc_xAxis(categories = table$brand, reversed = FALSE)%>%
       hc_xAxis(categories = table$brand, opposite = TRUE, reversed = FALSE) %>%
-      hc_add_series(data = table$adj_good_rate, name = '相对好评率',  color = '#ffa700', label = list(step = 1))%>%
-      hc_add_series(data = -table$adj_poor_rate, name = '相对差评率', color = 'black', label = list(step = 1)) %>%
+      hc_add_series(data = table$adj_good_rate, name = '相对好评率',  color = '#ffa800', label = list(step = 1))%>%
+      hc_add_series(data = -table$adj_poor_rate, name = '相对差评率', color = '#727272', label = list(step = 1)) %>%
       hc_plotOptions(series = list(stacking = 'normal'))%>%
       hc_tooltip(pointFormat = '{series.name}: {point.y: .3f}') %>% 
       hc_legend(enabled = TRUE) #%>%
@@ -1078,8 +1036,8 @@ server <- shinyServer(function(input, output, session){
       #hc_yAxis(labels= list(format='{function() {return Math.abs(value)}}')) %>%
       hc_xAxis(categories = table$brand, reversed = FALSE)%>%
       hc_xAxis(categories = table$brand, opposite = TRUE, reversed = FALSE) %>%
-      hc_add_series(data = table$adj_good_rate, name = '相对好评率',  color = '#B2DF8A', label = list(step = 1))%>%
-      hc_add_series(data = -table$adj_poor_rate, name = '相对差评率', color = 'black', label = list(step = 1)) %>%
+      hc_add_series(data = table$adj_good_rate, name = '相对好评率',  color = '#abc7b9', label = list(step = 1))%>%
+      hc_add_series(data = -table$adj_poor_rate, name = '相对差评率', color = '#727272', label = list(step = 1)) %>%
       hc_plotOptions(series = list(stacking = 'normal'))%>%
       hc_tooltip(pointFormat = '{series.name}: {point.y: .3f}') %>% 
       hc_legend(enabled = TRUE) #%>%
@@ -1094,8 +1052,8 @@ server <- shinyServer(function(input, output, session){
       #hc_yAxis(labels= list(format='{function() {return Math.abs(value)}}')) %>%
       hc_xAxis(categories = table$brand, reversed = FALSE)%>%
       hc_xAxis(categories = table$brand, opposite = TRUE, reversed = FALSE) %>%
-      hc_add_series(data = table$adj_good_rate, name = '相对好评率',  color = '#A6CEE3', label = list(step = 1))%>%
-      hc_add_series(data = -table$adj_poor_rate, name = '相对差评率', color = 'black', label = list(step = 1)) %>%
+      hc_add_series(data = table$adj_good_rate, name = '相对好评率',  color = '#ab7ac1', label = list(step = 1))%>%
+      hc_add_series(data = -table$adj_poor_rate, name = '相对差评率', color = '#727272', label = list(step = 1)) %>%
       hc_plotOptions(series = list(stacking = 'normal'))%>%
       hc_tooltip(pointFormat = '{series.name}: {point.y: .3f}') %>% 
       hc_legend(enabled = TRUE) #%>%
@@ -1110,8 +1068,8 @@ server <- shinyServer(function(input, output, session){
       #hc_yAxis(labels= list(format='{function() {return Math.abs(value)}}')) %>%
       hc_xAxis(categories = table$brand, reversed = FALSE)%>%
       hc_xAxis(categories = table$brand, opposite = TRUE, reversed = FALSE) %>%
-      hc_add_series(data = table$adj_good_rate, name = '相对好评率',  color = '#1F78B4', label = list(step = 1))%>%
-      hc_add_series(data = -table$adj_poor_rate, name = '相对差评率', color = 'black', label = list(step = 1)) %>%
+      hc_add_series(data = table$adj_good_rate, name = '相对好评率',  color = '#ff7c4c', label = list(step = 1))%>%
+      hc_add_series(data = -table$adj_poor_rate, name = '相对差评率', color = '#727272', label = list(step = 1)) %>%
       hc_plotOptions(series = list(stacking = 'normal'))%>%
       hc_tooltip(pointFormat = '{series.name}: {point.y: .3f}') %>% 
       hc_legend(enabled = TRUE) #%>%
@@ -1157,7 +1115,7 @@ server <- shinyServer(function(input, output, session){
     datatable(table, rownames = FALSE)%>%
       formatStyle(
         'score',
-        background = styleColorBar(table$score, '#d62d20'),
+        background = styleColorBar(table$score, '#fd8282'),
         backgroundSize = '100% 90%',
         backgroundRepeat = 'no-repeat',
         backgroundPosition = 'center'
@@ -1169,7 +1127,7 @@ server <- shinyServer(function(input, output, session){
     datatable(table, rownames = FALSE)%>%
       formatStyle(
         'score',
-        background = styleColorBar(table$score, '#0057e7'),
+        background = styleColorBar(table$score, '#1b75bb'),
         backgroundSize = '100% 90%',
         backgroundRepeat = 'no-repeat',
         backgroundPosition = 'center'
@@ -1181,7 +1139,7 @@ server <- shinyServer(function(input, output, session){
     datatable(table, rownames = FALSE)%>%
       formatStyle(
         'score',
-        background = styleColorBar(table$score, '#008744'),
+        background = styleColorBar(table$score, '#43e8d8'),
         backgroundSize = '100% 90%',
         backgroundRepeat = 'no-repeat',
         backgroundPosition = 'center'
@@ -1193,7 +1151,7 @@ server <- shinyServer(function(input, output, session){
     datatable(table, rownames = FALSE) %>%
       formatStyle(
         'score',
-        background = styleColorBar(table$score, '#ffa700'),
+        background = styleColorBar(table$score, '#ffa800'),
         backgroundSize = '100% 90%',
         backgroundRepeat = 'no-repeat',
         backgroundPosition = 'center'
@@ -1205,7 +1163,7 @@ server <- shinyServer(function(input, output, session){
     datatable(table, rownames = FALSE) %>%
       formatStyle(
         'score',
-        background = styleColorBar(table$score, '#B2DF8A'),
+        background = styleColorBar(table$score, '#abc7b9'),
         backgroundSize = '100% 90%',
         backgroundRepeat = 'no-repeat',
         backgroundPosition = 'center'
@@ -1217,7 +1175,7 @@ server <- shinyServer(function(input, output, session){
     datatable(table, rownames = FALSE) %>%
       formatStyle(
         'score',
-        background = styleColorBar(table$score, '#A6CEE3'),
+        background = styleColorBar(table$score, '#ab7ac1'),
         backgroundSize = '100% 90%',
         backgroundRepeat = 'no-repeat',
         backgroundPosition = 'center'
@@ -1229,7 +1187,7 @@ server <- shinyServer(function(input, output, session){
     datatable(table, rownames = FALSE) %>%
       formatStyle(
         'score',
-        background = styleColorBar(table$score, '#1F78B4'),
+        background = styleColorBar(table$score, '#ff7c4c'),
         backgroundSize = '100% 90%',
         backgroundRepeat = 'no-repeat',
         backgroundPosition = 'center'

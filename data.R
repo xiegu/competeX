@@ -5,6 +5,7 @@ library(data.table)
 library(RMySQL)
 library(pool)
 
+source('config.R', local = TRUE)
 # Connect to database 'jd'
 #con <- dbConnect(MySQL(), dbname = db$dbname, username = db$username, password = db$password)
 
@@ -53,7 +54,10 @@ sale <- hot_sale_info()
 search <- hot_search_info()
 comment <- comment_info()
 
-detail <- mutate(detail, brand = toupper(brand))
+#detail <- mutate(detail, brand = toupper(brand))
+brand_short <- do.call(rbind, strsplit(detail$brand, split = '（'))[,1]
+detail <- mutate(detail, brand = brand_short)
+rm(brand_short)
 com <- inner_join(com, score, by = c('id'= 'sku_id'))%>%unique
 com <- left_join(com, unique(select(detail, id, brand)), by = c('id' = 'id')) %>% unique
 
