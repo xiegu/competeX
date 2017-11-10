@@ -1111,7 +1111,7 @@ server <- shinyServer(function(input, output, session){
   })
   
   output$ScoreRefTop <- renderDataTable({
-    table <- filter(score_full, category == 'ref') %>% select(id, name, brand, score) %>% top_n(20, score)
+    table <- filter(score_full, category == 'ref') %>% select(brand, id, name, score) %>% top_n(20, score)
     datatable(table, rownames = FALSE)%>%
       formatStyle(
         'score',
@@ -1119,23 +1119,33 @@ server <- shinyServer(function(input, output, session){
         backgroundSize = '100% 90%',
         backgroundRepeat = 'no-repeat',
         backgroundPosition = 'center'
+      )%>%formatStyle(
+        'brand',
+        color = 'white',
+        backgroundColor = styleEqual(
+          unique(table$brand), color_brand[1:length(unique(table$brand))])
       )
   })
   
   output$ScoreAirTop <- renderDataTable({
-    table <- filter(score_full, category == 'air') %>% select(id, name, brand, score) %>% top_n(20, score)
-    datatable(table, rownames = FALSE)%>%
+    table <- filter(score_full, category == 'air') %>% select(brand, id, name, score) %>% top_n(20, score)
+    datatable(table, rownames = FALSE) %>%
       formatStyle(
         'score',
         background = styleColorBar(table$score, '#1b75bb'),
         backgroundSize = '100% 90%',
         backgroundRepeat = 'no-repeat',
         backgroundPosition = 'center'
+      )%>%formatStyle(
+        'brand',
+        color = 'white',
+        backgroundColor = styleEqual(
+          unique(table$brand), color_brand[1:length(unique(table$brand))])
       )
   })
-  
+    
   output$ScoreWashTop <- renderDataTable({
-    table <- filter(score_full, category == 'wash') %>% select(id, name, brand, score) %>% top_n(20, score)
+    table <- filter(score_full, category == 'wash') %>% select(brand, id, name, score) %>% top_n(20, score)
     datatable(table, rownames = FALSE)%>%
       formatStyle(
         'score',
@@ -1143,11 +1153,16 @@ server <- shinyServer(function(input, output, session){
         backgroundSize = '100% 90%',
         backgroundRepeat = 'no-repeat',
         backgroundPosition = 'center'
+      )%>%formatStyle(
+        'brand',
+        color = 'white',
+        backgroundColor = styleEqual(
+          unique(table$brand), color_brand[1:length(unique(table$brand))])
       )
   })
   
   output$ScoreTVTop <- renderDataTable({
-    table <- filter(score_full, category == 'tv') %>% select(id, name, brand, score) %>% top_n(20, score)
+    table <- filter(score_full, category == 'tv') %>% select(brand, id, name, score) %>% top_n(20, score)
     datatable(table, rownames = FALSE) %>%
       formatStyle(
         'score',
@@ -1155,11 +1170,16 @@ server <- shinyServer(function(input, output, session){
         backgroundSize = '100% 90%',
         backgroundRepeat = 'no-repeat',
         backgroundPosition = 'center'
+      )%>%formatStyle(
+        'brand',
+        color = 'white',
+        backgroundColor = styleEqual(
+          unique(table$brand), color_brand[1:length(unique(table$brand))])
       )
   })
   
   output$ScoreGasTop <- renderDataTable({
-    table <- filter(score_full, category == 'gas') %>% select(id, name, brand, score) %>% top_n(20, score)
+    table <- filter(score_full, category == 'gas') %>% select(brand, id, name, score) %>% top_n(20, score)
     datatable(table, rownames = FALSE) %>%
       formatStyle(
         'score',
@@ -1167,11 +1187,16 @@ server <- shinyServer(function(input, output, session){
         backgroundSize = '100% 90%',
         backgroundRepeat = 'no-repeat',
         backgroundPosition = 'center'
+      )%>%formatStyle(
+        'brand',
+        color = 'white',
+        backgroundColor = styleEqual(
+          unique(table$brand), color_brand[1:length(unique(table$brand))])
       )
   })
   
   output$ScoreHoodTop <- renderDataTable({
-    table <- filter(score_full, category == 'hood') %>% select(id, name, brand, score) %>% top_n(20, score)
+    table <- filter(score_full, category == 'hood') %>% select(brand, id, name, score) %>% top_n(20, score)
     datatable(table, rownames = FALSE) %>%
       formatStyle(
         'score',
@@ -1179,11 +1204,16 @@ server <- shinyServer(function(input, output, session){
         backgroundSize = '100% 90%',
         backgroundRepeat = 'no-repeat',
         backgroundPosition = 'center'
+      )%>%formatStyle(
+        'brand',
+        color = 'white',
+        backgroundColor = styleEqual(
+          unique(table$brand), color_brand[1:length(unique(table$brand))])
       )
   })
   
   output$ScoreDishTop <- renderDataTable({
-    table <- filter(score_full, category == 'dish') %>% select(id, name, brand, score) %>% top_n(20, score)
+    table <- filter(score_full, category == 'dish') %>% select(brand, id, name, score) %>% top_n(20, score)
     datatable(table, rownames = FALSE) %>%
       formatStyle(
         'score',
@@ -1191,6 +1221,11 @@ server <- shinyServer(function(input, output, session){
         backgroundSize = '100% 90%',
         backgroundRepeat = 'no-repeat',
         backgroundPosition = 'center'
+      )%>%formatStyle(
+        'brand',
+        color = 'white',
+        backgroundColor = styleEqual(
+          unique(table$brand), color_brand[1:length(unique(table$brand))])
       )
   })
   
