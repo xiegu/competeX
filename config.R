@@ -2,6 +2,7 @@ library(RColorBrewer)
 library(magrittr)
 library(jsonlite)
 
+
 # Intro
 steps_1 <- data.frame(step = c(1,2,3), element = c('#step1_1', '#step1_2', '#step1_3'), 
                       intro = c('显示该类别下各个品牌的在售商品的价格分布。箱形图代表该品牌按照价格从低到高排序后，排在前5%到95%的商品的价格区间。箱形图上下两侧的圆点代表价格极高/极低的商品。',

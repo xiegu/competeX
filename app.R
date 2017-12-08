@@ -13,262 +13,299 @@ library(jsonlite)
 
 #source('config.R', local = TRUE)
 #source('data.R', local = TRUE)
+source('util.R', local = TRUE)
 load('data.RData')
 
-ui <- dashboardPage(skin = 'red',
-                    dashboardHeader(title = 'CompeteX'),
-                    dashboardSidebar(
-                      sidebarMenu(
-                        br(),
-                        menuItem('竞品全景', tabName = 'Competitor', icon = icon('th')),
-                        menuItem('热卖商品分析', tabName = 'HotSales', icon = icon('th')),
-                        menuItem('热门搜索词分析', tabName = 'HotSearch', icon = icon('th')),
-                        menuItem('评论抓取监视', tabName = "CommentCrawl", icon = icon("dashboard")),
-                        menuItem('用户偏好画像', tabName = 'CommentScore', icon = icon('th')),
-                        menuItem('用户感知画像', tabName = 'CommentSentiment', icon = icon('th')),
+ui <- uiOutput('ui')
 
-                        column(
-                          width =12,
-                          hr(),
-                          h5(icon('refresh', class = 'fa-spin'), '数据更新时间: '),
-                          strong(com$update_time[1])
-                        )
-                      )
-                    ),
-                    dashboardBody(
-                      # Include IntroJS styling
-                      includeCSS("www/introjs.css"),
-                      
-                      # Include styling for the app
-                      #includeCSS("app.css"),
-                      
-                      # Include IntroJS library
-                      includeScript("www/intro.js"),
-                      
-                      # Include javascript code to make shiny communicate with introJS
-                      includeScript("www/app.js"),
-#                       tags$style(HTML("
-# 
-# 
-# .box.box-danger>.box-body {
-#   color:#fff;
-#   background:#666666
-#                     }
-# 
-# .box.box-solid.box-primary{
-# border-bottom-color:#666666;
-# border-left-color:#666666;
-# border-right-color:#666666;
-# border-top-color:#666666;
-# } ")),
-                      tabItems(
-                        tabItem(tabName = 'Competitor',
-                                fluidRow(
-                                  column(
-                                    width = 1,
-                                    actionButton(inputId="startHelp1", label="Help", class="btn-success")
-                                  ),
-                                  column(
-                                    width = 2,
-                                    checkboxInput('Outlier', '是否包括价格极高/极低的商品？', value = TRUE)
-                                  ),
-                                  
-                                  column(
-                                    width = 4,
-                                    selectizeInput('MultiCat', label = NULL,  multiple = TRUE,  choices = c(
-                                      '冰箱' = 'ref', 
-                                      '空调' = 'air',
-                                      '洗衣机' = 'wash', 
-                                      '电视' = 'tv',
-                                      '燃气灶' = 'gas',
-                                      '油烟机' = 'hood',
-                                      '洗碗机'= 'dish'), selected = c('ref', 'air', 'wash'), options = list(maxItems = 4) )
-                                  )
-                                ),
-                                
-                                uiOutput('ComProfile')
-                                
-                        ),
-                        tabItem(tabName = "CommentCrawl",
-                                fluidRow(
-                                  valueBox(
-                                    subtitle = 'No of comments',
-                                    value = textOutput('Comments'),
-                                    color = 'teal',
-                                    icon = icon('money')
-                                  ),
-                                  valueBox(
-                                    subtitle = 'No of item ID',
-                                    value = textOutput('Ids'),
-                                    color = 'teal',
-                                    icon = icon('money')
-                                  )
-                                ),
-                                fluidRow(
-                                  column(width =12,
-                                         dataTableOutput('Details')
-                                  )
-                                )
-                        ),
-                        tabItem(tabName = 'HotSales',
-                                fluidRow(
-                                  column(width = 1,
-                                         actionButton(inputId="startHelp2", label="Help", class="btn-success")
-                                  )
-                                ),
-                                br(),
-                                fluidRow(
-                                  box(id = 'step2_1',
-                                      status = 'primary',
-                                      title = '各品牌热卖商品排行榜', 
-                                      width = 6,
-                                      fluidRow(
-                                        column(width = 2,
-                                               selectInput('HotCategory', label = '类别', choices = c(
-                                                 '冰箱' = 'ref', 
-                                                 '空调' = 'air',
-                                                 '洗衣机' = 'wash', 
-                                                 '电视' = 'tv',
-                                                 '燃气灶' = 'gas',
-                                                 '油烟机' = 'hood',
-                                                 '洗碗机'= 'dish'))
-                                        ),
-                                        column(width = 2,
-                                               uiOutput('HotBrand')
-                                        )
-                                      ),
-                                      dataTableOutput('HotName')
-                                  ),
-                                  tabBox(id = 'step2_2',
-                                    title = '热卖商品关键字',
-                                    side = 'right',
-                                    width = 6,
-                                    tabPanel('冰箱',
-                                             wordcloud2Output('RefWord', height = '400px')
-                                    ),
-                                    tabPanel('空调',
-                                             wordcloud2Output('AirWord', height = '400px')
-                                    ),
-                                    tabPanel('洗衣机',
-                                             wordcloud2Output('WashWord', height = '400px')
-                                    ),
-                                    tabPanel('电视',
-                                             wordcloud2Output('TVWord', height = '400px')
-                                    ),
-                                    tabPanel('燃气灶',
-                                             wordcloud2Output('GasWord', height = '400px')
-                                    ),
-                                    tabPanel('油烟机',
-                                             wordcloud2Output('HoodWord', height = '400px')
-                                    ),
-                                    tabPanel('洗碗机',
-                                             wordcloud2Output('DishWord', height = '400px')
-                                    )
-                                  )
-                                ),
-                                br(),
-                                fluidRow(
-                                  column(
-                                    width = 4,
-                                    selectizeInput('MultiCat2', label = NULL, multiple = TRUE,  choices = c(
-                                      '冰箱' = 'ref',
-                                      '空调' = 'air',
-                                      '洗衣机' = 'wash', 
-                                      '电视' = 'tv',
-                                      '燃气灶' = 'gas',
-                                      '油烟机' = 'hood',
-                                      '洗碗机'= 'dish'), selected = c('ref', 'air', 'wash'), options = list(maxItems = 4))
-                                  )
-                                ),
-                                fluidRow(
-                                uiOutput('HotSaleList')
-                                )
-                        ),
-                        tabItem(tabName = 'HotSearch',
-                                fluidRow(
-                                  column(width = 2,
-                                         actionButton(inputId="startHelp3", label="Help", class="btn-success")
-                                  )
-                                ),
-                                br(),
-                                fluidRow(
-                                  box(id = 'step3_1',
-                                      status = 'primary',
-                                      title = '热门搜索词分布',
-                                      width = 6,
-                                      highchartOutput('HotSearchBar', height = '800px')
-                                  ),
-                                  box(id = 'step3_2',
-                                      status = 'primary',
-                                      title = '热门搜索词类占比',
-                                      width = 6,
-                                      highchartOutput('HotSearchPie', height = '600px'))
-                                )
-                        ),
-                        tabItem(tabName = 'CommentScore',
-                                fluidRow(
-                                  column(width = 1,
-                                         actionButton(inputId="startHelp4", label="Help", class="btn-success")
-                                  ),
-                                  column(width = 4,
-                                         selectizeInput('MultiCat3', label = NULL, multiple = TRUE, choices = c(
-                                           '冰箱' = 'ref', 
-                                           '空调' = 'air',
-                                           '洗衣机' = 'wash', 
-                                           '电视' = 'tv',
-                                           '燃气灶' = 'gas',
-                                           '油烟机' = 'hood',
-                                           '洗碗机'= 'dish'), selected = c('ref', 'air','wash'), options = list(maxItems = 4))
-                                         
-                                  )
-                                ),
-                               
-                                uiOutput('UserPref')
-                        ),
-                        tabItem(tabName = 'CommentSentiment',
-                                fluidRow(
-                                  column(width = 1,
-                                         actionButton(inputId="startHelp5", label="Help", class="btn-success")
-                                  )
-                                ),
-                                br(),
-                                fluidRow(
-                                  box(id = 'step5_1',
-                                      status = 'danger',
-                                      title = '用户感知度',
-                                      width = 12,
-                                      fluidRow(
-                                        column(width = 2,
-                                               selectInput('CommentGoP', label = '客户感知度', choices = c('好评' = 'good', '差评' = 'poor'))
-                                        ),
-                                        column(width = 2,
-                                               selectInput('CommentCat', label = '类别', choices = c(
-                                                                                                  '冰箱' = 'ref', 
-                                                                                                  '空调' = 'air',
-                                                                                                  '洗衣机' = 'wash', 
-                                                                                                  '电视' = 'tv',
-                                                                                                  '燃气灶' = 'gas',
-                                                                                                  '油烟机' = 'hood',
-                                                                                                  '洗碗机'= 'dish'))
-                                        ),
-                                        column(width = 2,
-                                               selectInput('CommentDirection', label = '方向', choices = c(
-                                                                                                    '纵向' = 'vertical',
-                                                                                                    '横向' = 'horizontal'
-                                               ))
-                                        )
-                                      ),
-                                      uiOutput('CommentBrand')
-                                      )
-                                )
-                        )
-                        )
-                      )
-                    )
+ui <- dashboardPage(skin = 'red',
+     dashboardHeader(title = 'CompeteX'),
+     dashboardSidebar(sidebarMenuOutput("SidebarMenuUI")),
+     dashboardBody(# Include IntroJS styling
+       includeCSS("www/introjs.css"),
+       
+       # Include styling for the app
+       #includeCSS("app.css"),
+       
+       # Include IntroJS library
+       includeScript("www/intro.js"),
+       
+       # Include javascript code to make shiny communicate with introJS
+       includeScript("www/app.js"),
+       #                       tags$style(HTML("
+       # 
+       # 
+       # .box.box-danger>.box-body {
+       #   color:#fff;
+       #   background:#666666
+       #                     }
+       # 
+       # .box.box-solid.box-primary{
+       # border-bottom-color:#666666;
+       # border-left-color:#666666;
+       # border-right-color:#666666;
+       # border-top-color:#666666;
+       # } ")),
+       uiOutput('Body'))
+  )
 
 server <- shinyServer(function(input, output, session){
   
+  # sidebar menu code
   
+  output$SidebarMenuUI <- renderMenu({
+    if (user_input$authenticated == FALSE) {
+    sidebarMenu()
+    }else{
+      sidebarMenu(
+        br(),
+        menuItem('竞品全景', tabName = 'Competitor', icon = icon('th')),
+        menuItem('热卖商品分析', tabName = 'HotSales', icon = icon('th')),
+        menuItem('热门搜索词分析', tabName = 'HotSearch', icon = icon('th')),
+        menuItem('评论抓取监视', tabName = "CommentCrawl", icon = icon("dashboard")),
+        menuItem('用户偏好画像', tabName = 'CommentScore', icon = icon('th')),
+        menuItem('用户感知画像', tabName = 'CommentSentiment', icon = icon('th')),
+        
+        column(
+          width =12,
+          hr(),
+          h5(icon('refresh', class = 'fa-spin'), '数据更新时间: '),
+          strong(com$update_time[1])
+        )
+      )
+      }
+  })
+  # body code
+  output$Body <- renderUI({
+    if (user_input$authenticated == FALSE) {
+      ##### UI code for login page
+      fluidPage(title = 'CompeteX - 360 competitor brand profile',
+                fluidRow(
+                  column(width = 2),
+                         #tags$img(src = 'logo_blue.jpg', width = '50%')),
+                  column(width =8, offset = 1,
+                         div(style = 'height:200px',
+                             tags$p(style = 'position:relative; bottom:-100px', strong(style = 'font-size:60px;color:rgba(221,75,57,1);', 'CompeteX'), span(style = 'font-size:35px;color:grey; ', ' 360 competitor brand profile'))
+                         )
+                  )
+                ),
+                fluidRow(
+                  column(width = 2, offset = 5,
+                         uiOutput("uiLogin"),
+                         uiOutput("pass")
+                  )
+                )
+      )
+    }else{
+                        
+                        tabItems(
+                          tabItem(tabName = 'Competitor',
+                                  fluidRow(
+                                    column(
+                                      width = 1,
+                                      actionButton(inputId="startHelp1", label="Help", class="btn-success")
+                                    ),
+                                    column(
+                                      width = 2,
+                                      checkboxInput('Outlier', '是否包括价格极高/极低的商品？', value = TRUE)
+                                    ),
+                                    
+                                    column(
+                                      width = 4,
+                                      selectizeInput('MultiCat', label = NULL,  multiple = TRUE,  choices = c(
+                                        '冰箱' = 'ref', 
+                                        '空调' = 'air',
+                                        '洗衣机' = 'wash', 
+                                        '电视' = 'tv',
+                                        '燃气灶' = 'gas',
+                                        '油烟机' = 'hood',
+                                        '洗碗机'= 'dish'), selected = c('ref', 'air', 'wash'), options = list(maxItems = 4) )
+                                    )
+                                  ),
+                                  
+                                  uiOutput('ComProfile')
+                                  
+                          ),
+                          tabItem(tabName = "CommentCrawl",
+                                  fluidRow(
+                                    valueBox(
+                                      subtitle = 'No of comments',
+                                      value = textOutput('Comments'),
+                                      color = 'teal',
+                                      icon = icon('money')
+                                    ),
+                                    valueBox(
+                                      subtitle = 'No of item ID',
+                                      value = textOutput('Ids'),
+                                      color = 'teal',
+                                      icon = icon('money')
+                                    )
+                                  ),
+                                  fluidRow(
+                                    column(width =12,
+                                           dataTableOutput('Details')
+                                    )
+                                  )
+                          ),
+                          tabItem(tabName = 'HotSales',
+                                  fluidRow(
+                                    column(width = 1,
+                                           actionButton(inputId="startHelp2", label="Help", class="btn-success")
+                                    )
+                                  ),
+                                  br(),
+                                  fluidRow(
+                                    box(id = 'step2_1',
+                                        status = 'primary',
+                                        title = '各品牌热卖商品排行榜', 
+                                        width = 6,
+                                        fluidRow(
+                                          column(width = 2,
+                                                 selectInput('HotCategory', label = '类别', choices = c(
+                                                   '冰箱' = 'ref', 
+                                                   '空调' = 'air',
+                                                   '洗衣机' = 'wash', 
+                                                   '电视' = 'tv',
+                                                   '燃气灶' = 'gas',
+                                                   '油烟机' = 'hood',
+                                                   '洗碗机'= 'dish'))
+                                          ),
+                                          column(width = 2,
+                                                 uiOutput('HotBrand')
+                                          )
+                                        ),
+                                        dataTableOutput('HotName')
+                                    ),
+                                    tabBox(id = 'step2_2',
+                                           title = '热卖商品关键字',
+                                           side = 'right',
+                                           width = 6,
+                                           tabPanel('冰箱',
+                                                    wordcloud2Output('RefWord', height = '400px')
+                                           ),
+                                           tabPanel('空调',
+                                                    wordcloud2Output('AirWord', height = '400px')
+                                           ),
+                                           tabPanel('洗衣机',
+                                                    wordcloud2Output('WashWord', height = '400px')
+                                           ),
+                                           tabPanel('电视',
+                                                    wordcloud2Output('TVWord', height = '400px')
+                                           ),
+                                           tabPanel('燃气灶',
+                                                    wordcloud2Output('GasWord', height = '400px')
+                                           ),
+                                           tabPanel('油烟机',
+                                                    wordcloud2Output('HoodWord', height = '400px')
+                                           ),
+                                           tabPanel('洗碗机',
+                                                    wordcloud2Output('DishWord', height = '400px')
+                                           )
+                                    )
+                                  ),
+                                  br(),
+                                  fluidRow(
+                                    column(
+                                      width = 4,
+                                      selectizeInput('MultiCat2', label = NULL, multiple = TRUE,  choices = c(
+                                        '冰箱' = 'ref',
+                                        '空调' = 'air',
+                                        '洗衣机' = 'wash', 
+                                        '电视' = 'tv',
+                                        '燃气灶' = 'gas',
+                                        '油烟机' = 'hood',
+                                        '洗碗机'= 'dish'), selected = c('ref', 'air', 'wash'), options = list(maxItems = 4))
+                                    )
+                                  ),
+                                  fluidRow(
+                                    uiOutput('HotSaleList')
+                                  )
+                          ),
+                          tabItem(tabName = 'HotSearch',
+                                  fluidRow(
+                                    column(width = 2,
+                                           actionButton(inputId="startHelp3", label="Help", class="btn-success")
+                                    )
+                                  ),
+                                  br(),
+                                  fluidRow(
+                                    box(id = 'step3_1',
+                                        status = 'primary',
+                                        title = '热门搜索词分布',
+                                        width = 6,
+                                        highchartOutput('HotSearchBar', height = '800px')
+                                    ),
+                                    box(id = 'step3_2',
+                                        status = 'primary',
+                                        title = '热门搜索词类占比',
+                                        width = 6,
+                                        highchartOutput('HotSearchPie', height = '600px'))
+                                  )
+                          ),
+                          tabItem(tabName = 'CommentScore',
+                                  fluidRow(
+                                    column(width = 1,
+                                           actionButton(inputId="startHelp4", label="Help", class="btn-success")
+                                    ),
+                                    column(width = 4,
+                                           selectizeInput('MultiCat3', label = NULL, multiple = TRUE, choices = c(
+                                             '冰箱' = 'ref', 
+                                             '空调' = 'air',
+                                             '洗衣机' = 'wash', 
+                                             '电视' = 'tv',
+                                             '燃气灶' = 'gas',
+                                             '油烟机' = 'hood',
+                                             '洗碗机'= 'dish'), selected = c('ref', 'air','wash'), options = list(maxItems = 4))
+                                           
+                                    )
+                                  ),
+                                  
+                                  uiOutput('UserPref')
+                          ),
+                          tabItem(tabName = 'CommentSentiment',
+                                  fluidRow(
+                                    column(width = 1,
+                                           actionButton(inputId="startHelp5", label="Help", class="btn-success")
+                                    )
+                                  ),
+                                  br(),
+                                  fluidRow(
+                                    box(id = 'step5_1',
+                                        status = 'danger',
+                                        title = '用户感知度',
+                                        width = 12,
+                                        fluidRow(
+                                          column(width = 2,
+                                                 selectInput('CommentGoP', label = '客户感知度', choices = c('好评' = 'good', '差评' = 'poor'))
+                                          ),
+                                          column(width = 2,
+                                                 selectInput('CommentCat', label = '类别', choices = c(
+                                                   '冰箱' = 'ref', 
+                                                   '空调' = 'air',
+                                                   '洗衣机' = 'wash', 
+                                                   '电视' = 'tv',
+                                                   '燃气灶' = 'gas',
+                                                   '油烟机' = 'hood',
+                                                   '洗碗机'= 'dish'))
+                                          ),
+                                          column(width = 2,
+                                                 selectInput('CommentDirection', label = '方向', choices = c(
+                                                   '纵向' = 'vertical',
+                                                   '横向' = 'horizontal'
+                                                 ))
+                                          )
+                                        ),
+                                        uiOutput('CommentBrand')
+                                    )
+                                  )
+                          )
+                        )
+                      
+  
+    }
+  })
+  
+  # server side
   observeEvent(input$startHelp1,{
     # set help content
     session$sendCustomMessage(type = 'setHelpContent1', message = list(steps_1 = toJSON(steps_1)))
@@ -1490,6 +1527,100 @@ server <- shinyServer(function(input, output, session){
       map(names(match_df)[-1], creat_hc2)%>% hw_grid(ncol = 5)
     }else{
       stop('Error!')
+    }
+  })
+
+  #### PASSWORD server code ---------------------------------------------------- 
+  # reactive value containing user's authentication status
+  user_input <- reactiveValues(authenticated = FALSE, valid_credentials = FALSE, 
+                               user_locked_out = FALSE, status = "")
+  
+  # authenticate user by:
+  #   1. checking whether their user name and password are in the credentials 
+  #       data frame and on the same row (credentials are valid)
+  #   2. if credentials are valid, retrieve their lockout status from the data frame
+  #   3. if user has failed login too many times and is not currently locked out, 
+  #       change locked out status to TRUE in credentials DF and save DF to file
+  #   4. if user is not authenticated, determine whether the user name or the password 
+  #       is bad (username precedent over pw) or he is locked out. set status value for
+  #       error message code below
+  observeEvent(input$login_button, {
+    credentials <- readRDS("credentials/credentials.rds")
+    
+    row_username <- which(credentials$user == input$user_name)
+    row_password <- which(credentials$pw == digest(input$password)) # digest() makes md5 hash of password
+    
+    # if user name row and password name row are same, credentials are valid
+    #   and retrieve locked out status
+    if (length(row_username) == 1 && 
+        length(row_password) >= 1 &&  # more than one user may have same pw
+        (row_username %in% row_password)) {
+      user_input$valid_credentials <- TRUE
+      user_input$user_locked_out <- credentials$locked_out[row_username]
+    }
+    
+    # if user is not currently locked out but has now failed login too many times:
+    #   1. set current lockout status to TRUE
+    #   2. if username is present in credentials DF, set locked out status in 
+    #     credentials DF to TRUE and save DF
+    if (input$login_button == num_fails_to_lockout & 
+        user_input$user_locked_out == FALSE) {
+      
+      user_input$user_locked_out <- TRUE
+      
+      if (length(row_username) == 1) {
+        credentials$locked_out[row_username] <- TRUE
+        
+        saveRDS(credentials, "credentials/credentials.rds")
+      }
+    }
+    
+    # if a user has valid credentials and is not locked out, he is authenticated      
+    if (user_input$valid_credentials == TRUE & user_input$user_locked_out == FALSE) {
+      user_input$authenticated <- TRUE
+    } else {
+      user_input$authenticated <- FALSE
+    }
+    
+    # if user is not authenticated, set login status variable for error messages below
+    if (user_input$authenticated == FALSE) {
+      if (user_input$user_locked_out == TRUE) {
+        user_input$status <- "locked_out"  
+      } else if (length(row_username) > 1) {
+        user_input$status <- "credentials_data_error"  
+      } else if (input$user_name == "" || length(row_username) == 0) {
+        user_input$status <- "bad_user"
+      } else if (input$password == "" || length(row_password) == 0) {
+        user_input$status <- "bad_password"
+      }
+    }
+  })   
+  
+  # password entry UI componenets:
+  #   username and password text fields, login button
+  output$uiLogin <- renderUI({
+    wellPanel(style = 'margin: 50px 0px 0px 0px',
+              textInput("user_name", "User Name:"),
+              
+              passwordInput("password", "Password:"),
+              
+              actionButton("login_button", "Log in")
+    )
+  })
+  
+  # red error message if bad credentials
+  output$pass <- renderUI({
+    if (user_input$status == "locked_out") {
+      h5(strong(paste0("Your account is locked because of too many\n",
+                       "failed login attempts. Contact administrator."), style = "color:red"), align = "center")
+    } else if (user_input$status == "credentials_data_error") {    
+      h5(strong("Credentials data error - contact administrator!", style = "color:red"), align = "center")
+    } else if (user_input$status == "bad_user") {
+      h5(strong("User name not found!", style = "color:red"), align = "center")
+    } else if (user_input$status == "bad_password") {
+      h5(strong("Incorrect password!", style = "color:red"), align = "center")
+    } else {
+      ""
     }
   })
   
