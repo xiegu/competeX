@@ -5,8 +5,8 @@ account: xiegu
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 226065
-bundleId: 1064516
+bundleId: 1122626
 url: https://xiegu.shinyapps.io/competeX/
-when: 1510129404.27739
+when: 1512714379.06322
 asMultiple: FALSE
 asStatic: FALSE

@@ -10,13 +10,13 @@ library(highcharter)
 library(wordcloud2)
 library(purrr)
 library(jsonlite)
+library(digest)
 
 #source('config.R', local = TRUE)
 #source('data.R', local = TRUE)
 source('util.R', local = TRUE)
 load('data.RData')
 
-ui <- uiOutput('ui')
 
 ui <- dashboardPage(skin = 'red',
      dashboardHeader(title = 'CompeteX'),
