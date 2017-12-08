@@ -52,7 +52,6 @@ ui <- dashboardPage(skin = 'red',
 server <- shinyServer(function(input, output, session){
   
   # sidebar menu code
-  
   output$SidebarMenuUI <- renderMenu({
     if (user_input$authenticated == FALSE) {
     sidebarMenu()
@@ -81,8 +80,8 @@ server <- shinyServer(function(input, output, session){
       ##### UI code for login page
       fluidPage(title = 'CompeteX - 360 competitor brand profile',
                 fluidRow(
-                  column(width = 2),
-                         #tags$img(src = 'logo_blue.jpg', width = '50%')),
+                  column(width = 2,
+                         tags$img(src = 'logo_blue.jpg', width = '70%')),
                   column(width =8, offset = 1,
                          div(style = 'height:200px',
                              tags$p(style = 'position:relative; bottom:-100px', strong(style = 'font-size:60px;color:rgba(221,75,57,1);', 'CompeteX'), span(style = 'font-size:35px;color:grey; ', ' 360 competitor brand profile'))
